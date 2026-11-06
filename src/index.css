@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  
+  /* Canvas & Surface Colors */
+  --color-canvas: #F8F9FA;
+  --color-canvas-subtle: #F3F4F6;
+  --color-surface: #FFFFFF;
+  --color-surface-hover: #F9FAFB;
+  --color-surface-active: #F3F4F6;
+  
+  /* High Contrast Typography */
+  --color-text-main: #111827;
+  --color-text-muted: #6B7280;
+  --color-text-subtle: #9CA3AF;
+  
+  /* Human-Crafted Crisp 1px Borders (Anti-Slop: Zero blurry glow) */
+  --color-border-hairline: rgba(0, 0, 0, 0.06);
+  --color-border-subtle: #E5E7EB;
+  --color-border-active: #D1D5DB;
+
+  /* Tag Badges: Tints & Saturated Typography */
+  --color-tag-study-bg: #EFF6FF;
+  --color-tag-study-text: #2563EB;
+  --color-tag-study-border: #DBEAFE;
+
+  --color-tag-project-bg: #F5F3FF;
+  --color-tag-project-text: #7C3AED;
+  --color-tag-project-border: #EDE9FE;
+
+  --color-tag-exam-bg: #FFF1F2;
+  --color-tag-exam-text: #E11D48;
+  --color-tag-exam-border: #FFE4E6;
+
+  --color-tag-design-bg: #FFFBEB;
+  --color-tag-design-text: #D97706;
+  --color-tag-design-border: #FEF3C7;
+
+  --color-tag-learning-bg: #ECFDF5;
+  --color-tag-learning-text: #059669;
+  --color-tag-learning-border: #D1FAE5;
+}
+
+/* Custom Lenis & Smooth Scroll Rules */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Subtle Custom Scrollbar for inner scroll containers */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* Hide scrollbar for Chrome, Safari, Opera and IE/Edge/Firefox */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
