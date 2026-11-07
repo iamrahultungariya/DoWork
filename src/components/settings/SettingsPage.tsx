@@ -2,7 +2,6 @@ import { SettingsSidebar } from './SettingsSidebar'
 import { GeneralSettingsCard } from './GeneralSettingsCard'
 import { NotificationSettingsCard } from './NotificationSettingsCard'
 import { AppearanceSettingsCard } from './AppearanceSettingsCard'
-import { ProjectsSettingsCard } from './ProjectsSettingsCard'
 import { BackupSyncSettingsCard } from './BackupSyncSettingsCard'
 import { AboutSettingsCard } from './AboutSettingsCard'
 import { useUIStore } from '@/stores/uiStore'
@@ -20,7 +19,6 @@ export function SettingsPage() {
         {activeSettingsTab === 'general' && <GeneralSettingsCard />}
         {activeSettingsTab === 'notifications' && <NotificationSettingsCard />}
         {activeSettingsTab === 'appearance' && <AppearanceSettingsCard />}
-        {activeSettingsTab === 'projects' && <ProjectsSettingsCard />}
         {activeSettingsTab === 'backup' && <BackupSyncSettingsCard />}
         {activeSettingsTab === 'about' && <AboutSettingsCard />}
       </div>

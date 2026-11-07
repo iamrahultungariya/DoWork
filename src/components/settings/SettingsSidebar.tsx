@@ -2,7 +2,6 @@ import {
   Settings,
   Bell,
   Palette,
-  Folder,
   Cloud,
   Info,
 } from 'lucide-react'
@@ -13,7 +12,6 @@ const SETTINGS_TABS = [
   { id: 'general', label: 'General', icon: Settings },
   { id: 'notifications', label: 'Notifications', icon: Bell },
   { id: 'appearance', label: 'Appearance', icon: Palette },
-  { id: 'projects', label: 'Projects', icon: Folder },
   { id: 'backup', label: 'Backup & Sync', icon: Cloud },
   { id: 'about', label: 'About', icon: Info },
 ]
@@ -23,7 +21,7 @@ export function SettingsSidebar() {
   const setActiveSettingsTab = useUIStore((s) => s.setActiveSettingsTab)
 
   return (
-    <div className="flex flex-row overflow-x-auto lg:flex-col gap-1.5 lg:gap-0 lg:space-y-1 w-full lg:w-56 select-none shrink-0 no-scrollbar pb-1 lg:pb-0">
+    <div className="flex flex-row overflow-x-auto lg:flex-col gap-1.5 lg:gap-1.5 w-full lg:w-56 select-none shrink-0 no-scrollbar pb-1 lg:pb-0">
       {SETTINGS_TABS.map((tab) => {
         const Icon = tab.icon
         const isActive = activeSettingsTab === tab.id
@@ -34,13 +32,13 @@ export function SettingsSidebar() {
             type="button"
             onClick={() => setActiveSettingsTab(tab.id)}
             className={cn(
-              'flex items-center space-x-2 lg:space-x-3 px-3 lg:px-3.5 py-2 lg:py-2.5 rounded-xl text-xs lg:text-sm font-medium transition-all duration-150 shrink-0 whitespace-nowrap',
+              'flex items-center space-x-2.5 lg:space-x-3 px-3.5 py-2.5 rounded-xl sm:rounded-2xl text-xs lg:text-sm font-semibold transition-all duration-150 shrink-0 whitespace-nowrap cursor-pointer',
               isActive
-                ? 'text-[#18181B] font-semibold bg-[#E4E4E7]/80 shadow-2xs'
-                : 'text-[#6B7280] hover:text-[#18181B] hover:bg-neutral-100/70'
+                ? 'text-[#18181B] dark:text-white bg-[#E4E4E7]/90 dark:bg-zinc-800 shadow-2xs'
+                : 'text-[#6B7280] dark:text-[#A1A1AA] hover:text-[#18181B] dark:hover:text-white hover:bg-neutral-100/80 dark:hover:bg-zinc-800/50'
             )}
           >
-            <Icon className={cn('w-4 h-4', isActive ? 'text-[#18181B]' : 'text-neutral-500')} />
+            <Icon className={cn('w-4 h-4', isActive ? 'text-[#18181B] dark:text-white' : 'text-neutral-500 dark:text-zinc-500')} />
             <span>{tab.label}</span>
           </button>
         )

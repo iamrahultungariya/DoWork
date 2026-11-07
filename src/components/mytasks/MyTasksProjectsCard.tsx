@@ -26,13 +26,13 @@ export function MyTasksProjectsCard() {
 
   return (
     <Card className="flex flex-col p-4 sm:p-5 rounded-2xl">
-      <div className="flex items-center justify-between pb-3 border-b border-black/[0.04]">
-        <h3 className="text-base font-bold text-[#111827] tracking-tight">Projects</h3>
+      <div className="flex items-center justify-between pb-3 border-b border-black/[0.04] dark:border-white/[0.08]">
+        <h3 className="text-base font-bold text-[#111827] dark:text-[#F4F4F5] tracking-tight">Projects</h3>
         <button
           type="button"
           onClick={() => setNewProjectModalOpen(true)}
           title="Create New Project"
-          className="w-6 h-6 rounded-lg border border-black/[0.06] flex items-center justify-center text-neutral-500 hover:text-black hover:bg-neutral-50 transition-colors shadow-2xs"
+          className="w-6 h-6 rounded-lg border border-black/[0.06] dark:border-white/[0.1] flex items-center justify-center text-neutral-500 dark:text-zinc-400 hover:text-black dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-zinc-800 transition-colors shadow-2xs cursor-pointer"
         >
           <Plus className="w-3.5 h-3.5" />
         </button>
@@ -43,30 +43,30 @@ export function MyTasksProjectsCard() {
           <div
             key={proj.id}
             onClick={() => setActiveTab('projects')}
-            className="flex items-center justify-between py-1.5 px-2 rounded-xl hover:bg-neutral-50 transition-colors cursor-pointer group"
+            className="flex items-center justify-between py-1.5 px-2 rounded-xl hover:bg-neutral-50 dark:hover:bg-zinc-800/60 transition-colors cursor-pointer group"
           >
             <div className="flex items-center space-x-2.5">
-              <Folder className="w-4 h-4 text-neutral-500 group-hover:text-neutral-900 transition-colors" />
-              <span className="text-xs font-semibold text-[#18181B]">{proj.name}</span>
+              <Folder className="w-4 h-4 text-neutral-500 dark:text-zinc-400 group-hover:text-neutral-900 dark:group-hover:text-white transition-colors" />
+              <span className="text-xs font-semibold text-[#18181B] dark:text-[#F4F4F5]">{proj.name}</span>
             </div>
-            <span className="text-xs font-bold text-[#6B7280] bg-neutral-100 px-2 py-0.5 rounded-full">
+            <span className="text-xs font-bold text-[#6B7280] dark:text-[#A1A1AA] bg-neutral-100 dark:bg-zinc-800 px-2 py-0.5 rounded-full">
               {proj.count}
             </span>
           </div>
         ))}
 
         {projectList.length === 0 && (
-          <div className="py-4 text-center text-xs text-[#9CA3AF]">
+          <div className="py-4 text-center text-xs text-[#9CA3AF] dark:text-zinc-500">
             No projects created yet.
           </div>
         )}
       </div>
 
-      <div className="pt-2 border-t border-black/[0.04] flex justify-center">
+      <div className="pt-2 border-t border-black/[0.04] dark:border-white/[0.08] flex justify-center">
         <button
           type="button"
           onClick={() => setActiveTab('projects')}
-          className="inline-flex items-center space-x-1.5 text-xs font-semibold text-[#18181B] hover:text-neutral-600 transition-colors"
+          className="inline-flex items-center space-x-1.5 text-xs font-semibold text-[#18181B] dark:text-[#F4F4F5] hover:text-neutral-600 dark:hover:text-zinc-300 transition-colors cursor-pointer"
         >
           <span>View All Projects</span>
           <ArrowRight className="w-3.5 h-3.5" />

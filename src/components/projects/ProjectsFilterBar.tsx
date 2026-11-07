@@ -25,8 +25,8 @@ export function ProjectsFilterBar() {
 
   return (
     <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4 pb-2 max-w-full">
-      {/* Left: Filter Pills */}
-      <div className="flex items-center space-x-1.5 p-1 bg-neutral-100/70 border border-black/[0.04] rounded-full max-w-full overflow-x-auto no-scrollbar shrink-0">
+      {/* Left: Filter Squircle Pills */}
+      <div className="flex items-center space-x-1.5 p-1.5 bg-neutral-100/80 dark:bg-zinc-800/80 border border-black/[0.04] dark:border-white/[0.08] rounded-xl sm:rounded-2xl max-w-full overflow-x-auto no-scrollbar shrink-0">
         {filters.map((f) => {
           const isActive = projectFilter === f.id
           return (
@@ -35,17 +35,17 @@ export function ProjectsFilterBar() {
               type="button"
               onClick={() => setProjectFilter(f.id)}
               className={cn(
-                'px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-150 flex items-center space-x-1.5 shrink-0 whitespace-nowrap',
+                'px-3.5 py-1.5 rounded-lg sm:rounded-xl text-xs font-semibold transition-all duration-150 flex items-center space-x-2 shrink-0 whitespace-nowrap cursor-pointer',
                 isActive
-                  ? 'bg-[#18181B] text-white shadow-xs'
-                  : 'text-[#6B7280] hover:text-[#18181B] hover:bg-neutral-200/50'
+                  ? 'bg-[#18181B] dark:bg-white text-white dark:text-[#09090B] shadow-2xs'
+                  : 'text-[#6B7280] dark:text-[#A1A1AA] hover:text-[#18181B] dark:hover:text-white hover:bg-neutral-200/60 dark:hover:bg-zinc-700/60'
               )}
             >
               <span>{f.label}</span>
               <span
                 className={cn(
-                  'text-[10px] px-1.5 py-0.2 rounded-full',
-                  isActive ? 'bg-white/20 text-white' : 'text-[#6B7280]'
+                  'text-[10px] px-1.5 py-0.2 rounded-md font-bold',
+                  isActive ? 'bg-white/20 dark:bg-black/20 text-white dark:text-[#09090B]' : 'text-[#6B7280] dark:text-[#A1A1AA]'
                 )}
               >
                 {f.count}
@@ -59,9 +59,9 @@ export function ProjectsFilterBar() {
       <Button
         size="sm"
         onClick={() => setNewProjectModalOpen(true)}
-        className="rounded-xl px-4 py-2 text-xs font-semibold bg-[#18181B] text-white hover:bg-neutral-800 shadow-xs shrink-0 self-end sm:self-auto"
+        className="rounded-xl sm:rounded-2xl px-4 py-2 text-xs font-bold bg-[#18181B] dark:bg-white text-white dark:text-[#09090B] hover:bg-neutral-800 dark:hover:bg-neutral-100 shadow-xs shrink-0 self-end sm:self-auto cursor-pointer"
       >
-        <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+        <Plus className="w-4 h-4 stroke-[2.5]" />
         <span>New Project</span>
       </Button>
     </div>

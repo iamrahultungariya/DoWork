@@ -65,22 +65,22 @@ export function MyTasksListCard() {
   return (
     <Card className="flex flex-col p-4 sm:p-6 rounded-2xl h-full">
       {/* Header with Title & View Toggles */}
-      <div className="flex items-center justify-between pb-3 border-b border-black/[0.04]">
-        <h2 className="text-lg font-bold text-[#111827] tracking-tight">
+      <div className="flex items-center justify-between pb-3 border-b border-black/[0.04] dark:border-white/[0.08]">
+        <h2 className="text-lg font-bold text-[#111827] dark:text-[#F4F4F5] tracking-tight">
           Tasks ({filtered.length})
         </h2>
 
         {/* View Mode Switcher */}
-        <div className="flex items-center space-x-1 p-0.5 bg-neutral-100 rounded-lg border border-black/[0.04]">
+        <div className="flex items-center space-x-1 p-0.5 bg-neutral-100 dark:bg-zinc-800 rounded-lg border border-black/[0.04] dark:border-white/[0.08]">
           <button
             type="button"
             onClick={() => setViewMode('list')}
             title="List View"
             className={cn(
-              'p-1.5 rounded-md transition-colors',
+              'p-1.5 rounded-md transition-colors cursor-pointer',
               viewMode === 'list'
-                ? 'bg-white shadow-2xs text-[#18181B]'
-                : 'text-neutral-400 hover:text-neutral-700'
+                ? 'bg-white dark:bg-[#18181B] shadow-2xs text-[#18181B] dark:text-white'
+                : 'text-neutral-400 dark:text-zinc-500 hover:text-neutral-700 dark:hover:text-zinc-200'
             )}
           >
             <List className="w-4 h-4" />
@@ -90,10 +90,10 @@ export function MyTasksListCard() {
             onClick={() => setViewMode('grid')}
             title="Grid View"
             className={cn(
-              'p-1.5 rounded-md transition-colors',
+              'p-1.5 rounded-md transition-colors cursor-pointer',
               viewMode === 'grid'
-                ? 'bg-white shadow-2xs text-[#18181B]'
-                : 'text-neutral-400 hover:text-neutral-700'
+                ? 'bg-white dark:bg-[#18181B] shadow-2xs text-[#18181B] dark:text-white'
+                : 'text-neutral-400 dark:text-zinc-500 hover:text-neutral-700 dark:hover:text-zinc-200'
             )}
           >
             <LayoutGrid className="w-4 h-4" />
@@ -106,7 +106,7 @@ export function MyTasksListCard() {
         className={cn(
           'pt-2',
           viewMode === 'list'
-            ? 'flex flex-col divide-y divide-black/[0.03]'
+            ? 'flex flex-col divide-y divide-black/[0.03] dark:divide-white/[0.06]'
             : 'grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3'
         )}
       >
@@ -117,8 +117,8 @@ export function MyTasksListCard() {
             <div
               key={task.id}
               className={cn(
-                'group flex items-center justify-between py-3 px-2 rounded-xl hover:bg-neutral-50/80 transition-all select-none',
-                viewMode === 'grid' && 'border border-black/[0.06] p-4 flex-col items-start space-y-3'
+                'group flex items-center justify-between py-3 px-2 rounded-xl hover:bg-neutral-50/80 dark:hover:bg-zinc-800/50 transition-all select-none',
+                viewMode === 'grid' && 'border border-black/[0.06] dark:border-white/[0.08] p-4 flex-col items-start space-y-3'
               )}
             >
               {/* Left Side: Checkbox & Info */}
@@ -135,21 +135,21 @@ export function MyTasksListCard() {
                     className={cn(
                       'text-sm font-medium transition-all truncate cursor-pointer',
                       isDone
-                        ? 'text-[#6B7280] line-through decoration-neutral-400'
-                        : 'text-[#111827] hover:text-neutral-900'
+                        ? 'text-[#6B7280] dark:text-zinc-500 line-through decoration-neutral-400 dark:decoration-zinc-600'
+                        : 'text-[#111827] dark:text-[#F4F4F5] hover:text-neutral-900 dark:hover:text-white'
                     )}
                   >
                     {task.title}
                   </div>
 
                   {/* Subline: Date & Duration */}
-                  <div className="flex items-center space-x-3 text-[11px] font-medium text-[#6B7280] mt-1">
+                  <div className="flex items-center space-x-3 text-[11px] font-medium text-[#6B7280] dark:text-[#A1A1AA] mt-1">
                     <span className="flex items-center space-x-1">
-                      <Calendar className="w-3 h-3 text-neutral-400" />
+                      <Calendar className="w-3 h-3 text-neutral-400 dark:text-zinc-500" />
                       <span>{task.dueDate}</span>
                     </span>
                     <span className="flex items-center space-x-1">
-                      <Clock className="w-3 h-3 text-neutral-400" />
+                      <Clock className="w-3 h-3 text-neutral-400 dark:text-zinc-500" />
                       <span>{task.estimatedTime}</span>
                     </span>
                   </div>
@@ -165,7 +165,7 @@ export function MyTasksListCard() {
                   type="button"
                   onClick={() => openEditTaskModal(task)}
                   title="Edit Task"
-                  className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 p-1.5 text-neutral-400 hover:text-neutral-900 rounded-lg transition-all"
+                  className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 p-1.5 text-neutral-400 dark:text-zinc-500 hover:text-neutral-900 dark:hover:text-zinc-200 rounded-lg transition-all cursor-pointer"
                 >
                   <Pencil className="w-4 h-4 stroke-[1.8]" />
                 </button>
@@ -175,7 +175,7 @@ export function MyTasksListCard() {
                   type="button"
                   onClick={() => handleDelete(task)}
                   title="Delete Task"
-                  className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 p-1.5 text-neutral-400 hover:text-rose-600 rounded-lg transition-all"
+                  className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 p-1.5 text-neutral-400 dark:text-zinc-500 hover:text-rose-600 dark:hover:text-rose-400 rounded-lg transition-all cursor-pointer"
                 >
                   <Trash2 className="w-4 h-4 stroke-[1.8]" />
                 </button>
@@ -185,14 +185,14 @@ export function MyTasksListCard() {
                   type="button"
                   onClick={() => toggleTaskStarred(task.id, task.starred)}
                   title={task.starred ? 'Starred' : 'Star this task'}
-                  className="p-1.5 rounded-lg transition-colors"
+                  className="p-1.5 rounded-lg transition-colors cursor-pointer"
                 >
                   <Star
                     className={cn(
                       'w-4 h-4 transition-colors',
                       task.starred
                         ? 'fill-amber-400 text-amber-500'
-                        : 'text-neutral-300 hover:text-neutral-500'
+                        : 'text-neutral-300 dark:text-zinc-600 hover:text-neutral-500 dark:hover:text-zinc-400'
                     )}
                   />
                 </button>
@@ -202,7 +202,7 @@ export function MyTasksListCard() {
         })}
 
         {filtered.length === 0 && (
-          <div className="py-12 text-center text-xs text-[#9CA3AF]">
+          <div className="py-12 text-center text-xs text-[#9CA3AF] dark:text-zinc-500">
             No tasks found in this view.
           </div>
         )}

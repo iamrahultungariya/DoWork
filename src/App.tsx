@@ -11,6 +11,7 @@ import { AddTaskModal } from '@/components/tasks/AddTaskModal'
 import { NewProjectModal } from '@/components/projects/NewProjectModal'
 import { ConfirmationModal } from '@/components/common/ConfirmationModal'
 import { ToastContainer } from '@/components/common/ToastContainer'
+import { AuthModal } from '@/components/auth/AuthModal'
 import { useUIStore } from '@/stores/uiStore'
 
 const queryClient = new QueryClient({
@@ -34,11 +35,12 @@ function AppContent() {
       {activeTab === 'projects' && <ProjectsPage />}
       {activeTab === 'settings' && <SettingsPage />}
 
-      {/* Global Modals, Palette & Toasts */}
+      {/* Global Modals, Palette, Auth & Toasts */}
       <CommandPalette />
       <AddTaskModal />
       <NewProjectModal />
       <ConfirmationModal />
+      <AuthModal />
       <ToastContainer />
     </MainLayout>
   )

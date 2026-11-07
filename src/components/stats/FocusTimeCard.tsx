@@ -44,15 +44,15 @@ export function FocusTimeCard() {
 
   return (
     <Card className="flex flex-col justify-between p-4 sm:p-6 rounded-2xl h-full">
-      <h3 className="text-base font-bold text-[#111827] tracking-tight mb-2">Completed Time</h3>
+      <h3 className="text-base font-bold text-[#111827] dark:text-[#F4F4F5] tracking-tight mb-2">Completed Time</h3>
 
       <div className="flex items-center justify-between gap-4 sm:gap-6 py-2">
         {/* Left: Value & Label */}
         <div>
-          <div className="text-2xl sm:text-3xl font-extrabold text-[#111827] tracking-tight">
+          <div className="text-2xl sm:text-3xl font-extrabold text-[#111827] dark:text-[#F4F4F5] tracking-tight">
             {focusTimeString}
           </div>
-          <div className="text-[11px] sm:text-xs font-semibold text-[#6B7280] mt-1">
+          <div className="text-[11px] sm:text-xs font-semibold text-[#6B7280] dark:text-[#A1A1AA] mt-1">
             Total task time completed
           </div>
         </div>
@@ -67,10 +67,10 @@ export function FocusTimeCard() {
                 <div
                   style={{ height: `${heightPct}%` }}
                   className={`w-2.5 xs:w-3.5 rounded-full transition-all duration-300 ${
-                    item.minutes > 0 ? 'bg-emerald-500' : 'bg-neutral-200'
+                    item.minutes > 0 ? 'bg-emerald-500' : 'bg-neutral-200 dark:bg-zinc-800'
                   }`}
                 />
-                <span className="text-[9px] xs:text-[10px] font-semibold text-[#9CA3AF] mt-1.5">{item.day}</span>
+                <span className="text-[9px] xs:text-[10px] font-semibold text-[#9CA3AF] dark:text-zinc-500 mt-1.5">{item.day}</span>
               </div>
             )
           })}

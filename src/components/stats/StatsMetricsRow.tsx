@@ -41,64 +41,64 @@ export function StatsMetricsRow() {
       {/* 1. Tasks Completed */}
       <Card className="flex flex-col justify-between p-4 sm:p-5 rounded-2xl h-32 sm:h-36">
         <div className="flex items-center justify-between">
-          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100/60 shadow-2xs">
+          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 flex items-center justify-center border border-blue-100/60 dark:border-blue-900/40 shadow-2xs">
             <CheckSquare className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.2]" />
           </div>
           {completedCount > 0 && (
-            <span className="inline-flex items-center text-[10px] sm:text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-100/80 px-1.5 sm:px-2 py-0.5 rounded-full">
+            <span className="inline-flex items-center text-[10px] sm:text-[11px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100/80 dark:border-emerald-800/50 px-1.5 sm:px-2 py-0.5 rounded-full">
               <ArrowUpRight className="w-3 h-3 mr-0.5" />
               {completionRate}%
             </span>
           )}
         </div>
         <div>
-          <div className="text-xl sm:text-2xl font-extrabold text-[#111827] tracking-tight">
+          <div className="text-xl sm:text-2xl font-extrabold text-[#111827] dark:text-[#F4F4F5] tracking-tight">
             {completedCount}
           </div>
-          <div className="text-[11px] sm:text-xs font-semibold text-[#6B7280] mt-0.5">Tasks Completed</div>
+          <div className="text-[11px] sm:text-xs font-semibold text-[#6B7280] dark:text-[#A1A1AA] mt-0.5">Tasks Completed</div>
         </div>
       </Card>
 
       {/* 2. Tasks Created */}
       <Card className="flex flex-col justify-between p-4 sm:p-5 rounded-2xl h-32 sm:h-36">
         <div className="flex items-center justify-between">
-          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100/60 shadow-2xs">
+          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 flex items-center justify-center border border-blue-100/60 dark:border-blue-900/40 shadow-2xs">
             <ListChecks className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.2]" />
           </div>
         </div>
         <div>
-          <div className="text-xl sm:text-2xl font-extrabold text-[#111827] tracking-tight">
+          <div className="text-xl sm:text-2xl font-extrabold text-[#111827] dark:text-[#F4F4F5] tracking-tight">
             {createdCount}
           </div>
-          <div className="text-[11px] sm:text-xs font-semibold text-[#6B7280] mt-0.5">Tasks Created</div>
+          <div className="text-[11px] sm:text-xs font-semibold text-[#6B7280] dark:text-[#A1A1AA] mt-0.5">Tasks Created</div>
         </div>
       </Card>
 
       {/* 3. Focus Time Completed */}
       <Card className="flex flex-col justify-between p-4 sm:p-5 rounded-2xl h-32 sm:h-36">
         <div className="flex items-center justify-between">
-          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100/60 shadow-2xs">
+          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 flex items-center justify-center border border-blue-100/60 dark:border-blue-900/40 shadow-2xs">
             <Clock className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.2]" />
           </div>
         </div>
         <div>
-          <div className="text-xl sm:text-2xl font-extrabold text-[#111827] tracking-tight">
+          <div className="text-xl sm:text-2xl font-extrabold text-[#111827] dark:text-[#F4F4F5] tracking-tight">
             {focusTimeString}
           </div>
-          <div className="text-[11px] sm:text-xs font-semibold text-[#6B7280] mt-0.5">Completed Time</div>
+          <div className="text-[11px] sm:text-xs font-semibold text-[#6B7280] dark:text-[#A1A1AA] mt-0.5">Completed Time</div>
         </div>
       </Card>
 
       {/* 4. Current Streak */}
       <Card className="flex flex-col justify-between p-4 sm:p-5 rounded-2xl h-32 sm:h-36">
-        <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-orange-50 text-orange-500 flex items-center justify-center border border-orange-100/60 shadow-2xs">
+        <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-orange-50 dark:bg-orange-950/40 text-orange-500 dark:text-orange-400 flex items-center justify-center border border-orange-100/60 dark:border-orange-900/40 shadow-2xs">
           <Flame className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.2] fill-orange-500/20" />
         </div>
         <div>
-          <div className="text-xl sm:text-2xl font-extrabold text-[#111827] tracking-tight">
+          <div className="text-xl sm:text-2xl font-extrabold text-[#111827] dark:text-[#F4F4F5] tracking-tight">
             {streakDays} days
           </div>
-          <div className="text-[11px] sm:text-xs font-semibold text-[#6B7280] mt-0.5">Current Streak</div>
+          <div className="text-[11px] sm:text-xs font-semibold text-[#6B7280] dark:text-[#A1A1AA] mt-0.5">Current Streak</div>
         </div>
       </Card>
     </div>

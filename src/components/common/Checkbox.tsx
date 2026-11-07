@@ -25,10 +25,10 @@ export const Checkbox = memo(function Checkbox({
       onClick={() => onChange(!checked)}
       whileTap={{ scale: 0.92 }}
       className={cn(
-        'w-5 h-5 rounded-md flex items-center justify-center transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-1',
+        'w-5 h-5 rounded-md flex items-center justify-center transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white focus-visible:ring-offset-1',
         checked
-          ? 'bg-[#18181B] text-white border border-[#18181B]'
-          : 'bg-white border-2 border-neutral-300 hover:border-neutral-400',
+          ? 'bg-[#18181B] dark:bg-white text-white dark:text-[#09090B] border border-[#18181B] dark:border-white'
+          : 'bg-white dark:bg-zinc-800 border-2 border-neutral-300 dark:border-zinc-600 hover:border-neutral-400 dark:hover:border-zinc-500',
         className
       )}
     >

@@ -37,7 +37,7 @@ export const TaskItemRow = memo(function TaskItemRow({ task }: TaskItemRowProps)
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -4 }}
       transition={{ duration: 0.18 }}
-      className="group flex items-center justify-between py-2.5 px-2 rounded-xl hover:bg-neutral-50/80 transition-colors duration-150 select-none"
+      className="group flex items-center justify-between py-2.5 px-2 rounded-xl hover:bg-neutral-50/80 dark:hover:bg-zinc-800/60 transition-colors duration-150 select-none"
     >
       {/* Left: Checkbox & Task Title */}
       <div className="flex items-center space-x-3.5 flex-1 min-w-0 mr-4">
@@ -50,8 +50,8 @@ export const TaskItemRow = memo(function TaskItemRow({ task }: TaskItemRowProps)
           className={cn(
             'text-sm font-medium transition-all duration-150 truncate cursor-pointer',
             isDone
-              ? 'text-[#6B7280] line-through decoration-neutral-400'
-              : 'text-[#111827] hover:text-neutral-900'
+              ? 'text-[#6B7280] dark:text-zinc-500 line-through decoration-neutral-400 dark:decoration-zinc-600'
+              : 'text-[#111827] dark:text-[#F4F4F5] hover:text-neutral-900 dark:hover:text-white'
           )}
           onClick={() => toggleTaskCompleted(task.id, task.completed)}
         >
@@ -69,16 +69,16 @@ export const TaskItemRow = memo(function TaskItemRow({ task }: TaskItemRowProps)
           onClick={() => toggleTaskFlagged(task.id, task.flagged)}
           title={task.flagged ? 'High Priority' : 'Normal Priority'}
           className={cn(
-            'p-1.5 rounded-lg transition-colors',
+            'p-1.5 rounded-lg transition-colors cursor-pointer',
             task.flagged
-              ? 'text-neutral-800 hover:text-black'
-              : 'text-neutral-300 hover:text-neutral-500'
+              ? 'text-neutral-800 dark:text-amber-400 hover:text-black dark:hover:text-amber-300'
+              : 'text-neutral-300 dark:text-zinc-600 hover:text-neutral-500 dark:hover:text-zinc-400'
           )}
         >
           <Flag
             className={cn(
               'w-4 h-4 stroke-[1.8]',
-              task.flagged && 'fill-neutral-800 text-neutral-800'
+              task.flagged && 'fill-neutral-800 dark:fill-amber-400 text-neutral-800 dark:text-amber-400'
             )}
           />
         </button>
@@ -88,7 +88,7 @@ export const TaskItemRow = memo(function TaskItemRow({ task }: TaskItemRowProps)
           type="button"
           onClick={() => openEditTaskModal(task)}
           title="Edit Task"
-          className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 p-1.5 text-neutral-400 hover:text-neutral-900 rounded-lg transition-opacity duration-150"
+          className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 p-1.5 text-neutral-400 dark:text-zinc-500 hover:text-neutral-900 dark:hover:text-zinc-200 rounded-lg transition-opacity duration-150 cursor-pointer"
         >
           <Pencil className="w-4 h-4 stroke-[1.8]" />
         </button>
@@ -98,7 +98,7 @@ export const TaskItemRow = memo(function TaskItemRow({ task }: TaskItemRowProps)
           type="button"
           onClick={handleDelete}
           title="Delete Task"
-          className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 p-1.5 text-neutral-400 hover:text-red-500 rounded-lg transition-opacity duration-150"
+          className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 p-1.5 text-neutral-400 dark:text-zinc-500 hover:text-rose-500 dark:hover:text-rose-400 rounded-lg transition-opacity duration-150 cursor-pointer"
         >
           <Trash2 className="w-4 h-4 stroke-[1.8]" />
         </button>

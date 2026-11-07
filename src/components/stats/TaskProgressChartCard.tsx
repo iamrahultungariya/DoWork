@@ -34,11 +34,11 @@ export function TaskProgressChartCard() {
   return (
     <Card className="flex flex-col p-4 sm:p-6 rounded-2xl h-full">
       {/* Header with Title and Legend */}
-      <div className="flex flex-col sm:flex-row gap-2 items-start sm:items-center justify-between pb-4 border-b border-black/[0.04]">
-        <h2 className="text-base font-bold text-[#111827] tracking-tight">Task Progress</h2>
-        <div className="flex items-center space-x-3 sm:space-x-4 text-xs font-semibold text-[#6B7280]">
+      <div className="flex flex-col sm:flex-row gap-2 items-start sm:items-center justify-between pb-4 border-b border-black/[0.04] dark:border-white/[0.08]">
+        <h2 className="text-base font-bold text-[#111827] dark:text-[#F4F4F5] tracking-tight">Task Progress</h2>
+        <div className="flex items-center space-x-3 sm:space-x-4 text-xs font-semibold text-[#6B7280] dark:text-[#A1A1AA]">
           <div className="flex items-center space-x-1.5">
-            <span className="w-2.5 h-2.5 rounded-sm bg-[#E2E8F0]" />
+            <span className="w-2.5 h-2.5 rounded-sm bg-[#E2E8F0] dark:bg-zinc-700" />
             <span>Created</span>
           </div>
           <div className="flex items-center space-x-1.5">
@@ -51,7 +51,7 @@ export function TaskProgressChartCard() {
       {/* Chart Canvas */}
       <div className="relative pt-6 pb-2 flex-1 flex">
         {/* Y-Axis Labels */}
-        <div className="flex flex-col justify-between text-[11px] font-semibold text-[#9CA3AF] pr-2.5 sm:pr-4 select-none h-44">
+        <div className="flex flex-col justify-between text-[11px] font-semibold text-[#9CA3AF] dark:text-zinc-500 pr-2.5 sm:pr-4 select-none h-44">
           {yTicks.map((val) => (
             <span key={val}>{val}</span>
           ))}
@@ -62,7 +62,7 @@ export function TaskProgressChartCard() {
           {/* Horizontal Grid Lines */}
           <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
             {yTicks.map((val) => (
-              <div key={val} className="w-full border-b border-black/[0.04]" />
+              <div key={val} className="w-full border-b border-black/[0.04] dark:border-white/[0.06]" />
             ))}
           </div>
 
@@ -79,7 +79,7 @@ export function TaskProgressChartCard() {
                     {/* Created (Background Bar) */}
                     <div
                       style={{ height: `${createdHeight}%` }}
-                      className="w-full bg-[#E2E8F0] rounded-t-lg transition-all duration-300"
+                      className="w-full bg-[#E2E8F0] dark:bg-zinc-700 rounded-t-lg transition-all duration-300"
                     />
                     {/* Completed (Foreground Bar) */}
                     <div
@@ -88,7 +88,7 @@ export function TaskProgressChartCard() {
                     />
                   </div>
                   {/* X-Axis Day Label */}
-                  <span className="text-[10px] sm:text-xs font-semibold text-[#6B7280] mt-3 group-hover:text-black transition-colors">
+                  <span className="text-[10px] sm:text-xs font-semibold text-[#6B7280] dark:text-[#A1A1AA] mt-3 group-hover:text-black dark:group-hover:text-white transition-colors">
                     {item.day}
                   </span>
                 </div>

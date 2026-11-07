@@ -60,7 +60,7 @@ export function MobileDrawer() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={() => setMobileMenuOpen(false)}
-            className="fixed inset-0 bg-black/45 backdrop-blur-xs"
+            className="fixed inset-0 bg-black/50 dark:bg-black/75 backdrop-blur-xs"
           />
 
           {/* Drawer Sheet */}
@@ -69,27 +69,27 @@ export function MobileDrawer() {
             animate={{ x: 0 }}
             exit={{ x: '-100%' }}
             transition={{ type: 'spring', damping: 28, stiffness: 300 }}
-            className="relative w-72 max-w-[85vw] h-full bg-[#F8F9FA] border-r border-black/[0.08] shadow-2xl p-5 flex flex-col justify-between z-10 overflow-y-auto"
+            className="relative w-72 max-w-[85vw] h-full bg-[#F8F9FA] dark:bg-[#0F0F12] border-r border-black/[0.08] dark:border-white/[0.08] shadow-2xl p-5 flex flex-col justify-between z-10 overflow-y-auto"
           >
             <div className="flex flex-col space-y-6">
               {/* Header with Brand & Close Button */}
-              <div className="flex items-center justify-between pb-3 border-b border-black/[0.05]">
+              <div className="flex items-center justify-between pb-3 border-b border-black/[0.05] dark:border-white/[0.08]">
                 <div className="flex items-center space-x-2.5">
-                  <div className="w-7 h-7 rounded-lg bg-[#18181B] text-white flex items-center justify-center shadow-xs">
+                  <div className="w-7 h-7 rounded-lg bg-[#18181B] dark:bg-white text-white dark:text-[#09090B] flex items-center justify-center shadow-xs">
                     <Check className="w-4 h-4 stroke-[3]" />
                   </div>
                   <div>
-                    <span className="font-bold text-sm tracking-tight text-[#18181B] block leading-tight">
+                    <span className="font-bold text-sm tracking-tight text-[#18181B] dark:text-[#F4F4F5] block leading-tight">
                       Personal Space
                     </span>
-                    <span className="text-[10px] text-[#6B7280]">TaskComp v0.2.1</span>
+                    <span className="text-[10px] text-[#6B7280] dark:text-[#A1A1AA]">TaskComp v0.2.1</span>
                   </div>
                 </div>
 
                 <button
                   type="button"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="p-1.5 rounded-lg text-neutral-400 hover:text-neutral-900 hover:bg-neutral-200/50 transition-colors"
+                  className="p-1.5 rounded-lg text-neutral-400 dark:text-zinc-500 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200/50 dark:hover:bg-zinc-800 transition-colors"
                   aria-label="Close menu"
                 >
                   <X className="w-5 h-5" />
@@ -98,7 +98,7 @@ export function MobileDrawer() {
 
               {/* Primary Navigation */}
               <div>
-                <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider px-3 mb-2 block">
+                <span className="text-[10px] font-bold text-neutral-400 dark:text-zinc-500 uppercase tracking-wider px-3 mb-2 block">
                   Workspace
                 </span>
                 <nav className="flex flex-col space-y-1">
@@ -114,11 +114,11 @@ export function MobileDrawer() {
                         className={cn(
                           'flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150',
                           isActive
-                            ? 'text-[#18181B] font-semibold bg-[#E4E4E7]/80 shadow-2xs'
-                            : 'text-[#6B7280] hover:text-[#18181B] hover:bg-neutral-200/40'
+                            ? 'text-[#18181B] dark:text-white font-semibold bg-[#E4E4E7]/80 dark:bg-zinc-800 shadow-2xs'
+                            : 'text-[#6B7280] dark:text-[#A1A1AA] hover:text-[#18181B] dark:hover:text-white hover:bg-neutral-200/40 dark:hover:bg-zinc-800/50'
                         )}
                       >
-                        <Icon className={cn('w-4 h-4', isActive ? 'text-[#18181B]' : 'text-[#6B7280]')} />
+                        <Icon className={cn('w-4 h-4', isActive ? 'text-[#18181B] dark:text-white' : 'text-[#6B7280] dark:text-[#A1A1AA]')} />
                         <span>{item.label}</span>
                       </button>
                     )
@@ -128,7 +128,7 @@ export function MobileDrawer() {
 
               {/* Secondary Navigation */}
               <div>
-                <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider px-3 mb-2 block">
+                <span className="text-[10px] font-bold text-neutral-400 dark:text-zinc-500 uppercase tracking-wider px-3 mb-2 block">
                   Preferences
                 </span>
                 <nav className="flex flex-col space-y-1">
@@ -144,11 +144,11 @@ export function MobileDrawer() {
                         className={cn(
                           'flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150',
                           isActive
-                            ? 'text-[#18181B] font-semibold bg-[#E4E4E7]/80 shadow-2xs'
-                            : 'text-[#6B7280] hover:text-[#18181B] hover:bg-neutral-200/40'
+                            ? 'text-[#18181B] dark:text-white font-semibold bg-[#E4E4E7]/80 dark:bg-zinc-800 shadow-2xs'
+                            : 'text-[#6B7280] dark:text-[#A1A1AA] hover:text-[#18181B] dark:hover:text-white hover:bg-neutral-200/40 dark:hover:bg-zinc-800/50'
                         )}
                       >
-                        <Icon className={cn('w-4 h-4', isActive ? 'text-[#18181B]' : 'text-[#6B7280]')} />
+                        <Icon className={cn('w-4 h-4', isActive ? 'text-[#18181B] dark:text-white' : 'text-[#6B7280] dark:text-[#A1A1AA]')} />
                         <span>{item.label}</span>
                       </button>
                     )
@@ -163,7 +163,7 @@ export function MobileDrawer() {
                 <img
                   src={sleepingCatImg}
                   alt="Sleeping Cat Sticker"
-                  className="w-full h-auto object-contain drop-shadow-xs"
+                  className="w-full h-auto object-contain drop-shadow-xs dark:drop-shadow-[0_2px_12px_rgba(255,255,255,0.06)]"
                 />
               </div>
             </div>

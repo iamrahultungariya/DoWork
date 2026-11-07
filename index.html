@@ -9,8 +9,24 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <title>TaskComp — Modern & Premium To-Do</title>
+    <!-- Zero-Flicker Dark Mode Boot Engine -->
+    <script>
+      (function() {
+        try {
+          var saved = localStorage.getItem('taskcomp_theme');
+          var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (saved === 'dark' || (!saved && systemDark) || (saved === 'system' && systemDark)) {
+            document.documentElement.classList.add('dark');
+            document.documentElement.style.colorScheme = 'dark';
+          } else {
+            document.documentElement.classList.remove('dark');
+            document.documentElement.style.colorScheme = 'light';
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
-  <body class="bg-[#F8F9FA] text-[#111827] antialiased selection:bg-emerald-100 selection:text-emerald-900">
+  <body class="bg-[#F8F9FA] dark:bg-[#09090B] text-[#111827] dark:text-[#F4F4F5] antialiased selection:bg-emerald-100 dark:selection:bg-emerald-950 selection:text-emerald-900 dark:selection:text-emerald-100 transition-colors duration-150">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

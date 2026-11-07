@@ -1,29 +1,31 @@
 /**
- * Procedural Audio Synthesizer (ZzFX architecture)
- * Pure Web Audio API math - 0KB audio assets, zero network latency.
+ * Studio Audio Engine powered by Howler.js
+ * Crisp, soothing, real audio assets with zero weird synthetic beeps.
  */
+import { Howl } from 'howler'
 
 class SoundEngine {
-  private ctx: AudioContext | null = null
   private enabled: boolean = true
-  private volume: number = 0.35
+  private volume: number = 0.4
+  private sounds: Map<string, Howl> = new Map()
 
   constructor() {
-    // Lazy AudioContext initialization on first user interaction
+    // Lazy initialized on first user interaction
   }
 
-  private getContext(): AudioContext | null {
+  private getHowl(name: string, srcPath: string): Howl | null {
     if (typeof window === 'undefined') return null
-    if (!this.ctx) {
-      const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext
-      if (AudioCtx) {
-        this.ctx = new AudioCtx()
-      }
+    let howl = this.sounds.get(name)
+    if (!howl) {
+      howl = new Howl({
+        src: [srcPath],
+        volume: this.volume,
+        preload: true,
+        html5: false,
+      })
+      this.sounds.set(name, howl)
     }
-    if (this.ctx && this.ctx.state === 'suspended') {
-      this.ctx.resume()
-    }
-    return this.ctx
+    return howl
   }
 
   public setEnabled(val: boolean) {
@@ -36,127 +38,85 @@ class SoundEngine {
 
   public setVolume(vol: number) {
     this.volume = Math.max(0, Math.min(1, vol))
+    this.sounds.forEach((howl) => {
+      howl.volume(this.volume)
+    })
   }
 
-  /**
-   * Generates a procedural sound with frequency curve and ADSR envelope
-   */
-  private synthesize(
-    startFreq: number,
-    endFreq: number,
-    duration: number,
-    type: OscillatorType = 'sine',
-    gainMultiplier = 1
-  ) {
+  private play(name: string, path: string) {
     if (!this.enabled) return
-    const ctx = this.getContext()
-    if (!ctx) return
-
     try {
-      const now = ctx.currentTime
-      const osc = ctx.createOscillator()
-      const gain = ctx.createGain()
-
-      osc.type = type
-      osc.frequency.setValueAtTime(startFreq, now)
-      osc.frequency.exponentialRampToValueAtTime(Math.max(20, endFreq), now + duration)
-
-      const masterGain = this.volume * gainMultiplier
-      gain.gain.setValueAtTime(0.001, now)
-      gain.gain.linearRampToValueAtTime(masterGain, now + 0.015)
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + duration)
-
-      osc.connect(gain)
-      gain.connect(ctx.destination)
-
-      osc.start(now)
-      osc.stop(now + duration)
+      const howl = this.getHowl(name, path)
+      if (howl) {
+        howl.volume(this.volume)
+        howl.play()
+      }
     } catch {
-      // Audio autoplay policy fallback
+      // Autoplay policy fallback
     }
   }
 
   /**
-   * Crisp tactile click for button presses and navigation items
+   * Crisp tactile wooden click for button presses and navigation items
    */
   public playClick() {
-    this.synthesize(480, 240, 0.04, 'triangle', 0.4)
+    this.play('click', '/sounds/click.wav')
   }
 
   /**
-   * Rewarding ascending harmonic chime for task completion
+   * Rewarding warm harmonic chord chime for task completion
    */
   public playComplete() {
-    if (!this.enabled) return
-    const ctx = this.getContext()
-    if (!ctx) return
-
-    const notes = [523.25, 659.25, 783.99, 1046.5] // C5, E5, G5, C6 major chord
-    notes.forEach((freq, idx) => {
-      setTimeout(() => {
-        this.synthesize(freq, freq * 1.02, 0.14, 'sine', 0.5)
-      }, idx * 45)
-    })
+    this.play('complete', '/sounds/complete.wav')
   }
 
   /**
-   * Subtle descending tap for unchecking a task
+   * Subtle soft tap for unchecking a task
    */
   public playUncheck() {
-    this.synthesize(420, 280, 0.05, 'sine', 0.35)
+    this.play('uncheck', '/sounds/uncheck.wav')
   }
 
   /**
    * Crisp airy pop for opening modals and Command Palette (Ctrl+K)
    */
   public playOpen() {
-    this.synthesize(320, 580, 0.08, 'sine', 0.45)
+    this.play('open', '/sounds/open.wav')
   }
 
   /**
    * Soft dismiss sound for closing modals
    */
   public playClose() {
-    this.synthesize(540, 310, 0.06, 'sine', 0.35)
+    this.play('close', '/sounds/close.wav')
   }
 
   /**
    * Inspiring chime for quick actions and notifications
    */
   public playAction() {
-    this.synthesize(640, 880, 0.12, 'triangle', 0.5)
+    this.play('action', '/sounds/action.wav')
   }
 
   /**
-   * Harmonic chime notification tone
+   * Harmonic ambient chime notification tone
    */
   public playChime() {
-    if (!this.enabled) return
-    const notes = [587.33, 880, 1174.66] // D5, A5, D6
-    notes.forEach((freq, idx) => {
-      setTimeout(() => {
-        this.synthesize(freq, freq * 1.01, 0.18, 'sine', 0.45)
-      }, idx * 70)
-    })
+    this.play('chime', '/sounds/chime.wav')
   }
 
   /**
    * Resonant crystal bell notification tone
    */
   public playBell() {
-    if (!this.enabled) return
-    this.synthesize(1318.51, 659.25, 0.35, 'triangle', 0.5) // E6 down with resonant ring
-    setTimeout(() => {
-      this.synthesize(1760, 880, 0.25, 'sine', 0.25)
-    }, 30)
+    this.play('bell', '/sounds/bell.wav')
   }
 
   /**
    * Airy bubble pop notification tone
    */
   public playPop() {
-    if (!this.enabled) return
-    this.synthesize(300, 950, 0.07, 'sine', 0.5)
+    this.play('pop', '/sounds/pop.wav')
   }
 
   /**
@@ -164,7 +124,6 @@ class SoundEngine {
    */
   public playNotification(soundType: 'chime' | 'bell' | 'pop' | 'mute' = 'chime') {
     if (soundType === 'mute') {
-      // Mute option suppresses audio but does not block notification
       return
     }
     if (soundType === 'bell') {

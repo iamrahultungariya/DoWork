@@ -27,7 +27,7 @@ export function ToastContainer() {
             initial={{ opacity: 0, y: 16, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.15 } }}
-            className="pointer-events-auto flex items-center justify-between p-3.5 bg-white border border-black/[0.08] rounded-xl shadow-lg shadow-black/5 text-[#111827] select-none"
+            className="pointer-events-auto flex items-center justify-between p-3.5 bg-white dark:bg-[#18181B] border border-black/[0.08] dark:border-white/[0.12] rounded-xl shadow-lg shadow-black/5 dark:shadow-black/40 text-[#111827] dark:text-[#F4F4F5] select-none"
           >
             <div className="flex items-center space-x-2.5 mr-3">
               {getIcon(toast.type)}
@@ -37,7 +37,7 @@ export function ToastContainer() {
             <button
               type="button"
               onClick={() => removeToast(toast.id)}
-              className="p-1 rounded-md text-neutral-400 hover:text-neutral-700 hover:bg-neutral-100 transition-colors"
+              className="p-1 rounded-md text-neutral-400 dark:text-zinc-500 hover:text-neutral-700 dark:hover:text-zinc-200 hover:bg-neutral-100 dark:hover:bg-zinc-800 transition-colors"
             >
               <X className="w-3.5 h-3.5" />
             </button>

@@ -1,6 +1,34 @@
 import { create } from 'zustand'
 import { sound } from '@/lib/sound'
-import type { Task } from '@/db/db'
+import { db, type Task } from '@/db/db'
+
+export type ThemeMode = 'light' | 'dark' | 'system'
+
+export function applyTheme(mode: ThemeMode) {
+  if (typeof window === 'undefined') return
+  const isDark =
+    mode === 'dark' ||
+    (mode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+
+  if (isDark) {
+    document.documentElement.classList.add('dark')
+    document.documentElement.style.colorScheme = 'dark'
+    const meta = document.querySelector('meta[name="theme-color"]')
+    if (meta) meta.setAttribute('content', '#09090B')
+  } else {
+    document.documentElement.classList.remove('dark')
+    document.documentElement.style.colorScheme = 'light'
+    const meta = document.querySelector('meta[name="theme-color"]')
+    if (meta) meta.setAttribute('content', '#F8F9FA')
+  }
+}
+
+const getInitialTheme = (): ThemeMode => {
+  if (typeof window === 'undefined') return 'light'
+  const saved = localStorage.getItem('taskcomp_theme') as ThemeMode
+  if (saved === 'dark' || saved === 'light' || saved === 'system') return saved
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+}
 
 export type NavTabId = 'home' | 'my-tasks' | 'today' | 'projects' | 'stats' | 'settings'
 
@@ -56,6 +84,7 @@ interface UIStoreState {
 
   // Settings State
   activeSettingsTab: string
+  theme: ThemeMode
 
   // Focus Timer State
   focusSecondsLeft: number
@@ -89,6 +118,7 @@ interface UIStoreState {
   setProjectFilter: (filter: ProjectFilterType) => void
   setStatsRange: (range: string) => void
   setActiveSettingsTab: (tab: string) => void
+  setTheme: (theme: ThemeMode) => void
   startFocusTimer: () => void
   pauseFocusTimer: () => void
   resetFocusTimer: () => void
@@ -125,12 +155,13 @@ export const useUIStore = create<UIStoreState>((set, get) => ({
   projectFilter: 'all',
   statsRange: 'Last 7 Days',
   activeSettingsTab: 'general',
+  theme: getInitialTheme(),
 
   focusSecondsLeft: 25 * 60,
   isFocusRunning: false,
 
   setActiveTab: (tab) => {
-    sound.playClick()
+    // Sound removed from page change as per preference
     set({ activeTab: tab, isMobileMenuOpen: false })
   },
 
@@ -209,7 +240,7 @@ export const useUIStore = create<UIStoreState>((set, get) => ({
   },
 
   setNotificationsEnabled: (enabled) => {
-    sound.playClick()
+    // Sound removed from toggle change as per preference
     set({ notificationsEnabled: enabled })
   },
 
@@ -222,7 +253,7 @@ export const useUIStore = create<UIStoreState>((set, get) => ({
     const next = !get().soundEnabled
     sound.setEnabled(next)
     set({ soundEnabled: next })
-    if (next) sound.playClick()
+    // Sound removed from toggle change as per preference
   },
 
   setVolume: (volume) => {
@@ -243,7 +274,7 @@ export const useUIStore = create<UIStoreState>((set, get) => ({
   },
 
   setTaskSort: (taskSort) => {
-    sound.playClick()
+    // Sound removed from apply sort as per preference
     set({ taskSort })
   },
 
@@ -253,13 +284,21 @@ export const useUIStore = create<UIStoreState>((set, get) => ({
   },
 
   setStatsRange: (statsRange) => {
-    sound.playClick()
     set({ statsRange })
   },
 
   setActiveSettingsTab: (activeSettingsTab) => {
-    sound.playClick()
+    // Sound removed from setting section navigation as per preference
     set({ activeSettingsTab })
+  },
+
+  setTheme: (theme) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('taskcomp_theme', theme)
+    }
+    applyTheme(theme)
+    set({ theme })
+    db.userProfile.update('default-profile', { theme }).catch(() => {})
   },
 
   startFocusTimer: () => {
@@ -287,3 +326,13 @@ export const useUIStore = create<UIStoreState>((set, get) => ({
     }
   },
 }))
+
+if (typeof window !== 'undefined') {
+  const media = window.matchMedia('(prefers-color-scheme: dark)')
+  media.addEventListener('change', () => {
+    const current = useUIStore.getState().theme
+    if (current === 'system') {
+      applyTheme('system')
+    }
+  })
+}

@@ -5,8 +5,9 @@ import { TopHeader } from './TopHeader'
 import { MobileDrawer } from './MobileDrawer'
 import { MobileBottomNav } from './MobileBottomNav'
 import { LenisProvider } from './LenisProvider'
-import { useUIStore } from '@/stores/uiStore'
-import { seedInitialTasksIfEmpty } from '@/db/db'
+import { useUIStore, applyTheme } from '@/stores/uiStore'
+import { useAuthStore } from '@/stores/authStore'
+import { db, seedInitialTasksIfEmpty } from '@/db/db'
 
 interface MainLayoutProps {
   children: ReactNode
@@ -17,9 +18,19 @@ export function MainLayout({ children }: MainLayoutProps) {
   const setCommandPaletteOpen = useUIStore((s) => s.setCommandPaletteOpen)
   const setAddTaskModalOpen = useUIStore((s) => s.setAddTaskModalOpen)
 
-  // Initialize Dexie seed database if empty
+  // Initialize Dexie seed database, Supabase Auth listener, and Theme
   useEffect(() => {
     seedInitialTasksIfEmpty().catch(console.error)
+    useAuthStore.getState().initialize()
+    db.userProfile.get('default-profile').then((profile) => {
+      if (profile?.theme) {
+        useUIStore.getState().setTheme(profile.theme)
+      } else {
+        applyTheme(useUIStore.getState().theme)
+      }
+    }).catch(() => {
+      applyTheme(useUIStore.getState().theme)
+    })
   }, [])
 
   // Global Keyboard Shortcuts
@@ -39,7 +50,7 @@ export function MainLayout({ children }: MainLayoutProps) {
 
   return (
     <LenisProvider>
-      <div className="flex min-h-screen bg-[#F8F9FA] text-[#111827] font-sans antialiased selection:bg-neutral-200">
+      <div className="flex min-h-screen bg-[#F8F9FA] dark:bg-[#09090B] text-[#111827] dark:text-[#F4F4F5] font-sans antialiased selection:bg-neutral-200 dark:selection:bg-neutral-800 transition-colors duration-150">
         {/* Desktop Left Sidebar (hidden on mobile) */}
         <Sidebar />
 

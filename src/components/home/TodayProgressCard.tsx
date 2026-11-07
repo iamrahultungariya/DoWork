@@ -15,13 +15,13 @@ export function TodayProgressCard() {
   const circumference = 2 * Math.PI * radius
   const strokeDashoffset = circumference - (percent / 100) * circumference
 
-  // Segmented bar representation (up to 8 segments matching the reference design)
+  // Segmented bar representation
   const segmentCount = 8
   const filledSegments = totalCount > 0 ? Math.round((doneCount / totalCount) * segmentCount) : 0
 
   return (
     <Card className="flex flex-col justify-between p-4 sm:p-5 rounded-2xl">
-      <h3 className="text-base font-bold text-[#111827] tracking-tight">Today's Progress</h3>
+      <h3 className="text-base font-bold text-[#111827] dark:text-[#F4F4F5] tracking-tight">Today's Progress</h3>
 
       <div className="flex items-center space-x-4 sm:space-x-6 py-2">
         {/* Left: Circular Progress Ring */}
@@ -32,9 +32,10 @@ export function TodayProgressCard() {
               cx="50"
               cy="50"
               r={radius}
-              stroke="#E5E7EB"
+              stroke="currentColor"
               strokeWidth={strokeWidth}
               fill="transparent"
+              className="text-neutral-200 dark:text-zinc-800"
             />
             {/* Animated Progress Arc */}
             <circle
@@ -53,13 +54,13 @@ export function TodayProgressCard() {
 
           {/* Center Percentage Display */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-xl font-extrabold text-[#111827]">{percent}%</span>
+            <span className="text-xl font-extrabold text-[#111827] dark:text-[#F4F4F5]">{percent}%</span>
           </div>
         </div>
 
         {/* Right: Summary Text & Segmented Indicator */}
         <div className="flex flex-col space-y-2.5">
-          <span className="text-xs font-semibold text-[#18181B]">
+          <span className="text-xs font-semibold text-[#18181B] dark:text-[#F4F4F5]">
             {doneCount} of {totalCount} tasks done
           </span>
 
@@ -71,7 +72,7 @@ export function TodayProgressCard() {
                 <div
                   key={idx}
                   className={`h-2 w-3 rounded-full transition-colors duration-300 ${
-                    isFilled ? 'bg-[#059669]' : 'bg-[#E5E7EB]'
+                    isFilled ? 'bg-[#059669]' : 'bg-[#E5E7EB] dark:bg-zinc-800'
                   }`}
                 />
               )

@@ -63,6 +63,7 @@ export interface UserProfile {
   defaultTaskView?: 'list' | 'board'
   autoMarkDone?: boolean
   archiveCompleted?: boolean
+  theme?: 'light' | 'dark' | 'system'
 }
 
 export class TaskDatabase extends Dexie {

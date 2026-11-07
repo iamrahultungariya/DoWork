@@ -86,34 +86,34 @@ export function ProjectsGrid() {
   const getProjectIcon = (icon: Project['icon']) => {
     switch (icon) {
       case 'laptop':
-        return <Laptop className="w-5 h-5 text-blue-600" />
+        return <Laptop className="w-5 h-5 text-blue-600 dark:text-blue-400" />
       case 'code':
-        return <Code className="w-5 h-5 text-purple-600" />
+        return <Code className="w-5 h-5 text-purple-600 dark:text-purple-400" />
       case 'palette':
-        return <Palette className="w-5 h-5 text-amber-600" />
+        return <Palette className="w-5 h-5 text-amber-600 dark:text-amber-400" />
       case 'book':
-        return <BookOpen className="w-5 h-5 text-emerald-600" />
+        return <BookOpen className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
       case 'target':
-        return <Target className="w-5 h-5 text-orange-600" />
+        return <Target className="w-5 h-5 text-orange-600 dark:text-orange-400" />
       default:
-        return <Folder className="w-5 h-5 text-blue-600" />
+        return <Folder className="w-5 h-5 text-blue-600 dark:text-blue-400" />
     }
   }
 
   const getIconBg = (icon: Project['icon']) => {
     switch (icon) {
       case 'laptop':
-        return 'bg-blue-50 border-blue-100'
+        return 'bg-blue-50 dark:bg-blue-950/40 border-blue-100 dark:border-blue-900/40'
       case 'code':
-        return 'bg-purple-50 border-purple-100'
+        return 'bg-purple-50 dark:bg-purple-950/40 border-purple-100 dark:border-purple-900/40'
       case 'palette':
-        return 'bg-amber-50 border-amber-100'
+        return 'bg-amber-50 dark:bg-amber-950/40 border-amber-100 dark:border-amber-900/40'
       case 'book':
-        return 'bg-emerald-50 border-emerald-100'
+        return 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-100 dark:border-emerald-900/40'
       case 'target':
-        return 'bg-orange-50 border-orange-100'
+        return 'bg-orange-50 dark:bg-orange-950/40 border-orange-100 dark:border-orange-900/40'
       default:
-        return 'bg-neutral-50 border-neutral-100'
+        return 'bg-neutral-50 dark:bg-zinc-800 border-neutral-100 dark:border-zinc-700'
     }
   }
 
@@ -121,7 +121,7 @@ export function ProjectsGrid() {
     <div className="flex flex-col space-y-4">
       {/* Sub-header with Sort & View Toggle */}
       <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
-        <h2 className="text-lg font-bold text-[#111827] tracking-tight">
+        <h2 className="text-lg font-bold text-[#111827] dark:text-[#F4F4F5] tracking-tight">
           Projects ({filtered.length})
         </h2>
 
@@ -134,12 +134,14 @@ export function ProjectsGrid() {
             prefixLabel="Sort"
           />
 
-          <div className="flex items-center space-x-1 p-0.5 bg-neutral-100 rounded-lg border border-black/[0.04]">
+          <div className="flex items-center space-x-1 p-0.5 bg-neutral-100 dark:bg-zinc-800 rounded-lg border border-black/[0.04] dark:border-white/[0.08]">
             <button
               type="button"
               onClick={() => setViewMode('grid')}
-              className={`p-1.5 rounded-md transition-all ${
-                viewMode === 'grid' ? 'bg-white shadow-2xs text-[#18181B]' : 'text-neutral-400 hover:text-neutral-700'
+              className={`p-1.5 rounded-md transition-all cursor-pointer ${
+                viewMode === 'grid'
+                  ? 'bg-white dark:bg-[#18181B] shadow-2xs text-[#18181B] dark:text-white'
+                  : 'text-neutral-400 dark:text-zinc-500 hover:text-neutral-700 dark:hover:text-zinc-200'
               }`}
               title="Grid View"
             >
@@ -148,8 +150,10 @@ export function ProjectsGrid() {
             <button
               type="button"
               onClick={() => setViewMode('list')}
-              className={`p-1.5 rounded-md transition-all ${
-                viewMode === 'list' ? 'bg-white shadow-2xs text-[#18181B]' : 'text-neutral-400 hover:text-neutral-700'
+              className={`p-1.5 rounded-md transition-all cursor-pointer ${
+                viewMode === 'list'
+                  ? 'bg-white dark:bg-[#18181B] shadow-2xs text-[#18181B] dark:text-white'
+                  : 'text-neutral-400 dark:text-zinc-500 hover:text-neutral-700 dark:hover:text-zinc-200'
               }`}
               title="List View"
             >
@@ -178,7 +182,7 @@ export function ProjectsGrid() {
           return (
             <Card
               key={proj.id}
-              className="flex flex-col justify-between p-4 sm:p-5 rounded-2xl hover:shadow-[0_4px_14px_rgba(0,0,0,0.04)] transition-all group"
+              className="flex flex-col justify-between p-4 sm:p-5 rounded-2xl hover:shadow-[0_4px_14px_rgba(0,0,0,0.04)] dark:hover:border-white/[0.14] transition-all group"
             >
               <div>
                 {/* Top Row: Icon, Title & Actions */}
@@ -198,10 +202,10 @@ export function ProjectsGrid() {
                       {getProjectIcon(proj.icon)}
                     </div>
                     <div className="min-w-0">
-                      <h3 className="text-sm font-bold text-[#111827] group-hover:text-black truncate">
+                      <h3 className="text-sm font-bold text-[#111827] dark:text-[#F4F4F5] group-hover:text-black dark:group-hover:text-white truncate">
                         {proj.name}
                       </h3>
-                      <p className="text-[11px] font-medium text-[#6B7280] line-clamp-1">
+                      <p className="text-[11px] font-medium text-[#6B7280] dark:text-[#A1A1AA] line-clamp-1">
                         {proj.description}
                       </p>
                     </div>
@@ -213,10 +217,10 @@ export function ProjectsGrid() {
                       type="button"
                       onClick={() => handleToggleCompleted(proj)}
                       title={proj.status === 'completed' ? 'Mark as Active' : 'Mark as Completed'}
-                      className={`p-1.5 rounded-lg border transition-all ${
+                      className={`p-1.5 rounded-lg border transition-all cursor-pointer ${
                         proj.status === 'completed'
-                          ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
-                          : 'border-transparent text-neutral-400 hover:text-emerald-600 hover:bg-neutral-100'
+                          ? 'border-emerald-200 dark:border-emerald-800/50 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400'
+                          : 'border-transparent text-neutral-400 dark:text-zinc-500 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-neutral-100 dark:hover:bg-zinc-800'
                       }`}
                     >
                       <Check className="w-3.5 h-3.5" />
@@ -227,7 +231,7 @@ export function ProjectsGrid() {
                       type="button"
                       onClick={() => handleDeleteProject(proj)}
                       title="Delete Project"
-                      className="p-1.5 rounded-lg text-neutral-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                      className="p-1.5 rounded-lg text-neutral-400 dark:text-zinc-500 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors cursor-pointer"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -236,8 +240,8 @@ export function ProjectsGrid() {
 
                 {/* Progress Bar & Percentage */}
                 <div className="mt-5 space-y-1.5">
-                  <div className="flex items-center justify-between text-xs font-bold text-[#111827]">
-                    <div className="w-full bg-neutral-100 rounded-full h-1.5 overflow-hidden mr-3">
+                  <div className="flex items-center justify-between text-xs font-bold text-[#111827] dark:text-[#F4F4F5]">
+                    <div className="w-full bg-neutral-100 dark:bg-zinc-800 rounded-full h-1.5 overflow-hidden mr-3">
                       <div
                         style={{ width: `${percent}%` }}
                         className="bg-[#10B981] h-full rounded-full transition-all duration-300"
@@ -249,9 +253,9 @@ export function ProjectsGrid() {
               </div>
 
               {/* Bottom Row: Task count and Due Date */}
-              <div className="flex items-center justify-between pt-4 mt-3 border-t border-black/[0.04] text-[11px] font-semibold text-[#6B7280]">
+              <div className="flex items-center justify-between pt-4 mt-3 border-t border-black/[0.04] dark:border-white/[0.08] text-[11px] font-semibold text-[#6B7280] dark:text-[#A1A1AA]">
                 <div className="flex items-center space-x-1.5">
-                  <CheckSquare className="w-3.5 h-3.5 text-neutral-400" />
+                  <CheckSquare className="w-3.5 h-3.5 text-neutral-400 dark:text-zinc-500" />
                   <span>
                     {completedTasks} of {totalTasks} tasks
                   </span>
@@ -259,13 +263,13 @@ export function ProjectsGrid() {
 
                 <div className="flex items-center space-x-1.5">
                   {isDone ? (
-                    <span className="inline-flex items-center text-emerald-600 font-bold">
+                    <span className="inline-flex items-center text-emerald-600 dark:text-emerald-400 font-bold">
                       <Check className="w-3.5 h-3.5 mr-1" />
                       Completed
                     </span>
                   ) : (
                     <>
-                      <Calendar className="w-3.5 h-3.5 text-neutral-400" />
+                      <Calendar className="w-3.5 h-3.5 text-neutral-400 dark:text-zinc-500" />
                       <span>{proj.dueDate}</span>
                     </>
                   )}
@@ -278,13 +282,13 @@ export function ProjectsGrid() {
         {/* Create New Project Card */}
         <div
           onClick={() => setNewProjectModalOpen(true)}
-          className="border-2 border-dashed border-neutral-300 hover:border-neutral-900 rounded-2xl p-6 flex flex-col items-center justify-center text-center cursor-pointer transition-all bg-white/50 hover:bg-white min-h-[160px] group shadow-2xs"
+          className="border-2 border-dashed border-neutral-300 dark:border-zinc-700 hover:border-neutral-900 dark:hover:border-zinc-300 rounded-2xl p-6 flex flex-col items-center justify-center text-center cursor-pointer transition-all bg-white/50 dark:bg-zinc-900/40 hover:bg-white dark:hover:bg-zinc-900/80 min-h-[160px] group shadow-2xs"
         >
-          <div className="w-10 h-10 rounded-full bg-neutral-100 group-hover:bg-neutral-900 group-hover:text-white text-neutral-700 flex items-center justify-center mb-3 transition-colors shadow-2xs">
+          <div className="w-10 h-10 rounded-full bg-neutral-100 dark:bg-zinc-800 group-hover:bg-neutral-900 dark:group-hover:bg-white group-hover:text-white dark:group-hover:text-zinc-900 text-neutral-700 dark:text-zinc-300 flex items-center justify-center mb-3 transition-colors shadow-2xs">
             <Plus className="w-4 h-4 stroke-[2.5]" />
           </div>
-          <h4 className="text-sm font-bold text-[#111827]">Create New Project</h4>
-          <p className="text-xs font-medium text-[#6B7280] mt-1 max-w-[200px]">
+          <h4 className="text-sm font-bold text-[#111827] dark:text-[#F4F4F5]">Create New Project</h4>
+          <p className="text-xs font-medium text-[#6B7280] dark:text-[#A1A1AA] mt-1 max-w-[200px]">
             Organize your tasks and goals in a project.
           </p>
         </div>

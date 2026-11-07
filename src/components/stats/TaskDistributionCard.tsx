@@ -35,7 +35,7 @@ export function TaskDistributionCard() {
 
   return (
     <Card className="flex flex-col justify-between p-4 sm:p-6 rounded-2xl h-full">
-      <h2 className="text-base font-bold text-[#111827] tracking-tight pb-3 border-b border-black/[0.04]">
+      <h2 className="text-base font-bold text-[#111827] dark:text-[#F4F4F5] tracking-tight pb-3 border-b border-black/[0.04] dark:border-white/[0.08]">
         Task Distribution
       </h2>
 
@@ -48,9 +48,10 @@ export function TaskDistributionCard() {
               cx="70"
               cy="70"
               r={radius}
-              stroke="#F1F5F9"
+              stroke="currentColor"
               strokeWidth="18"
               fill="transparent"
+              className="text-neutral-100 dark:text-zinc-800"
             />
 
             {distribution.map((cat) => {
@@ -77,10 +78,10 @@ export function TaskDistributionCard() {
 
           {/* Center Text */}
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-            <span className="text-xl font-extrabold text-[#111827] leading-none">
+            <span className="text-xl font-extrabold text-[#111827] dark:text-[#F4F4F5] leading-none">
               {totalTasks}
             </span>
-            <span className="text-xs font-semibold text-[#6B7280] mt-1">Tasks</span>
+            <span className="text-xs font-semibold text-[#6B7280] dark:text-[#A1A1AA] mt-1">Tasks</span>
           </div>
         </div>
 
@@ -93,17 +94,17 @@ export function TaskDistributionCard() {
                   style={{ backgroundColor: cat.color }}
                   className="w-2.5 h-2.5 rounded-full shrink-0"
                 />
-                <span className="font-semibold text-[#18181B]">{cat.name}</span>
+                <span className="font-semibold text-[#18181B] dark:text-[#F4F4F5]">{cat.name}</span>
               </div>
-              <span className="font-bold text-[#6B7280]">
+              <span className="font-bold text-[#6B7280] dark:text-[#A1A1AA]">
                 {cat.percentage}% ({cat.count})
               </span>
             </div>
           ))}
 
           {distribution.length === 0 && (
-            <div className="text-center py-6 text-xs text-neutral-400">
-              No task category data available yet.
+            <div className="text-center py-4 text-[#9CA3AF] dark:text-zinc-500">
+              No tasks tracked yet.
             </div>
           )}
         </div>
