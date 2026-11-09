@@ -1,6 +1,8 @@
 import { db, type Task, type TaskCategory, type TaskStatus, type Project } from './db'
 import { sound } from '@/lib/sound'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase'
+import { recalculateAndPersistStreak } from '@/lib/streak'
+import { getTodayFormattedDate } from '@/lib/date'
 
 export interface CreateTaskPayload {
   title: string
@@ -48,6 +50,7 @@ export async function syncFromSupabase(userId: string): Promise<void> {
         order: t.order_index ?? 0,
         createdAt: new Date(t.created_at).getTime(),
         updatedAt: new Date(t.updated_at).getTime(),
+        completedAt: t.completed === 1 ? new Date(t.updated_at).getTime() : undefined,
       }))
       await db.tasks.bulkPut(mappedTasks)
     }
@@ -73,6 +76,9 @@ export async function syncFromSupabase(userId: string): Promise<void> {
       }))
       await db.projects.bulkPut(mappedProjects)
     }
+
+    // Recalculate streak based on newly synced tasks
+    await recalculateAndPersistStreak()
   } catch (err) {
     console.warn('Supabase sync warning:', err)
   }
@@ -86,6 +92,12 @@ export async function addTask(payload: CreateTaskPayload): Promise<string> {
   const now = Date.now()
   const id = `task-${now}-${Math.random().toString(36).substring(2, 7)}`
 
+  // If dueDate is not provided or 'Today', default to actual formatted calendar date
+  const finalDueDate =
+    !payload.dueDate || payload.dueDate.toLowerCase() === 'today'
+      ? getTodayFormattedDate()
+      : payload.dueDate
+
   const newTask: Task = {
     id,
     title: payload.title.trim(),
@@ -94,7 +106,7 @@ export async function addTask(payload: CreateTaskPayload): Promise<string> {
     status: payload.status || 'todo',
     flagged: payload.flagged ?? false,
     starred: payload.starred ?? false,
-    dueDate: payload.dueDate || 'Today',
+    dueDate: finalDueDate,
     estimatedTime: payload.estimatedTime || '30 min',
     order: count + 1,
     createdAt: now,
@@ -171,16 +183,21 @@ export async function updateTask(id: string, updates: Partial<Task>): Promise<vo
 }
 
 /**
- * Toggles completion status and triggers audio feedback
+ * Toggles completion status and triggers audio feedback & streak calculation
  */
 export async function toggleTaskCompleted(id: string, currentCompleted: number): Promise<void> {
   const newCompleted = currentCompleted === 1 ? 0 : 1
   const newStatus: TaskStatus = newCompleted === 1 ? 'done' : 'todo'
+  const now = Date.now()
 
   await updateTask(id, {
     completed: newCompleted,
     status: newStatus,
+    completedAt: newCompleted === 1 ? now : undefined,
   })
+
+  // Recalculate streak immediately
+  await recalculateAndPersistStreak()
 
   if (newCompleted === 1) {
     sound.playComplete()
@@ -212,6 +229,7 @@ export async function toggleTaskFlagged(id: string, currentFlagged: boolean): Pr
  */
 export async function deleteTask(id: string): Promise<void> {
   await db.tasks.delete(id)
+  await recalculateAndPersistStreak()
   sound.playClick()
 
   if (isSupabaseConfigured()) {
@@ -341,6 +359,7 @@ export async function clearAllData(): Promise<void> {
   await db.tasks.clear()
   await db.projects.clear()
   await db.scheduleItems.clear()
+  await db.userProfile.update('default-profile', { streakDays: 0 }).catch(() => {})
   sound.playClick()
 }
 

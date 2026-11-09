@@ -25,6 +25,7 @@ export interface Task {
   order: number
   createdAt: number
   updatedAt: number
+  completedAt?: number
 }
 
 export interface ScheduleItem {

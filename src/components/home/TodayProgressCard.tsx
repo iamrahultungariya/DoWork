@@ -1,12 +1,14 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '@/db/db'
 import { Card } from '@/components/common/Card'
+import { isTaskDueTodayOrOverdue } from '@/lib/date'
 
 export function TodayProgressCard() {
-  const tasks = useLiveQuery(() => db.tasks.toArray(), [])
+  const tasks = useLiveQuery(() => db.tasks.toArray(), []) || []
 
-  const totalCount = tasks ? tasks.length : 0
-  const doneCount = tasks ? tasks.filter((t) => t.completed === 1).length : 0
+  const todayTasks = tasks.filter((t) => isTaskDueTodayOrOverdue(t.dueDate, t.createdAt, t.completed))
+  const totalCount = todayTasks.length
+  const doneCount = todayTasks.filter((t) => t.completed === 1).length
   const percent = totalCount > 0 ? Math.round((doneCount / totalCount) * 100) : 0
 
   // SVG Circular progress math
@@ -37,7 +39,7 @@ export function TodayProgressCard() {
               fill="transparent"
               className="text-neutral-200 dark:text-zinc-800"
             />
-            {/* Animated Progress Arc */}
+            {/* Progress Arc */}
             <circle
               cx="50"
               cy="50"
@@ -54,14 +56,15 @@ export function TodayProgressCard() {
 
           {/* Center Percentage Display */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-xl font-extrabold text-[#111827] dark:text-[#F4F4F5]">{percent}%</span>
+            <span className="text-xl font-bold text-[#111827] dark:text-[#F4F4F5] tabular-nums">{percent}%</span>
           </div>
         </div>
 
         {/* Right: Summary Text & Segmented Indicator */}
         <div className="flex flex-col space-y-2.5">
           <span className="text-xs font-semibold text-[#18181B] dark:text-[#F4F4F5]">
-            {doneCount} of {totalCount} tasks done
+            <span className="tabular-nums font-bold">{doneCount}</span> of{' '}
+            <span className="tabular-nums font-bold">{totalCount}</span> tasks done
           </span>
 
           {/* Segmented Progress Pills */}

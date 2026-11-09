@@ -1,34 +1,41 @@
 import { useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { Plus, ArrowRight } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { db } from '@/db/db'
 import { Card } from '@/components/common/Card'
 import { Button } from '@/components/common/Button'
 import { TaskItemRow } from './TaskItemRow'
 import { useUIStore } from '@/stores/uiStore'
 import { sound } from '@/lib/sound'
+import { isTaskDueTodayOrOverdue } from '@/lib/date'
 
 export function TodayTasksCard() {
   const setAddTaskModalOpen = useUIStore((s) => s.setAddTaskModalOpen)
   const [showAll, setShowAll] = useState(false)
 
-  const tasks = useLiveQuery(() => db.tasks.orderBy('order').toArray(), [])
+  const allTasks = useLiveQuery(() => db.tasks.orderBy('order').toArray(), []) || []
 
-  const totalCount = tasks ? tasks.length : 0
-  const doneCount = tasks ? tasks.filter((t) => t.completed === 1).length : 0
+  // Filter tasks due today or overdue carryovers
+  const todayTasks = allTasks.filter((t) => isTaskDueTodayOrOverdue(t.dueDate, t.createdAt, t.completed))
+
+  const totalCount = todayTasks.length
+  const doneCount = todayTasks.filter((t) => t.completed === 1).length
 
   // By default display the top 5 tasks
-  const displayTasks = tasks ? (showAll ? tasks : tasks.slice(0, 5)) : []
+  const displayTasks = showAll ? todayTasks : todayTasks.slice(0, 5)
 
   return (
     <Card className="flex flex-col justify-between p-4 sm:p-6 rounded-2xl h-full">
       <div>
         {/* Header: Title, Counts & Add Task Button */}
-        <div className="flex items-center justify-between pb-3 border-b border-black/[0.04] dark:border-white/[0.08]">
+        <div className="flex items-center justify-between pb-3.5 border-b border-black/[0.05] dark:border-white/[0.08]">
           <div>
-            <h2 className="text-lg font-bold text-[#111827] dark:text-[#F4F4F5] tracking-tight">Today's Tasks</h2>
-            <p className="text-xs font-medium text-[#6B7280] dark:text-[#A1A1AA] mt-0.5">
-              {totalCount} tasks · {doneCount} done
+            <h2 className="text-base sm:text-lg font-bold text-[#111827] dark:text-[#F4F4F5] tracking-tight">
+              Today's Tasks
+            </h2>
+            <p className="text-xs text-[#6B7280] dark:text-[#A1A1AA] mt-0.5">
+              <span className="tabular-nums font-semibold">{totalCount}</span> tasks ·{' '}
+              <span className="tabular-nums font-semibold text-emerald-600 dark:text-emerald-400">{doneCount}</span> done
             </p>
           </div>
 
@@ -37,8 +44,7 @@ export function TodayTasksCard() {
             onClick={() => setAddTaskModalOpen(true)}
             className="rounded-lg px-3 py-1.5 text-xs font-semibold bg-[#18181B] dark:bg-white text-white dark:text-[#09090B] hover:bg-neutral-800 dark:hover:bg-neutral-100 shadow-xs cursor-pointer"
           >
-            <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
-            <span>Add Task</span>
+            Add Task
           </Button>
         </div>
 
@@ -50,7 +56,7 @@ export function TodayTasksCard() {
 
           {displayTasks.length === 0 && (
             <div className="py-8 text-center text-xs text-[#9CA3AF] dark:text-zinc-500">
-              No tasks found. Click "+ Add Task" to create one.
+              No tasks scheduled for today. Click "Add Task" to create one.
             </div>
           )}
         </div>

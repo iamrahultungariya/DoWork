@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { MainLayout } from '@/components/layout/MainLayout'
 import { HomePage } from '@/components/home/HomePage'
@@ -13,6 +14,8 @@ import { ConfirmationModal } from '@/components/common/ConfirmationModal'
 import { ToastContainer } from '@/components/common/ToastContainer'
 import { AuthModal } from '@/components/auth/AuthModal'
 import { useUIStore } from '@/stores/uiStore'
+import { seedInitialTasksIfEmpty } from '@/db/db'
+import { recalculateAndPersistStreak } from '@/lib/streak'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,6 +28,12 @@ const queryClient = new QueryClient({
 
 function AppContent() {
   const activeTab = useUIStore((s) => s.activeTab)
+
+  useEffect(() => {
+    seedInitialTasksIfEmpty().then(() => {
+      recalculateAndPersistStreak().catch(() => {})
+    })
+  }, [])
 
   return (
     <MainLayout>

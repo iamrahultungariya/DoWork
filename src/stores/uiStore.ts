@@ -32,7 +32,7 @@ const getInitialTheme = (): ThemeMode => {
 
 export type NavTabId = 'home' | 'my-tasks' | 'today' | 'projects' | 'stats' | 'settings'
 
-export type TaskFilterType = 'all' | 'todo' | 'in_progress' | 'done'
+export type TaskFilterType = 'all' | 'today' | 'overdue' | 'todo' | 'in_progress' | 'done'
 export type TaskSortType = 'priority' | 'date' | 'title'
 export type ProjectFilterType = 'all' | 'active' | 'completed' | 'archived'
 
@@ -161,7 +161,6 @@ export const useUIStore = create<UIStoreState>((set, get) => ({
   isFocusRunning: false,
 
   setActiveTab: (tab) => {
-    // Sound removed from page change as per preference
     set({ activeTab: tab, isMobileMenuOpen: false })
   },
 
@@ -240,7 +239,6 @@ export const useUIStore = create<UIStoreState>((set, get) => ({
   },
 
   setNotificationsEnabled: (enabled) => {
-    // Sound removed from toggle change as per preference
     set({ notificationsEnabled: enabled })
   },
 
@@ -253,7 +251,6 @@ export const useUIStore = create<UIStoreState>((set, get) => ({
     const next = !get().soundEnabled
     sound.setEnabled(next)
     set({ soundEnabled: next })
-    // Sound removed from toggle change as per preference
   },
 
   setVolume: (volume) => {
@@ -274,7 +271,6 @@ export const useUIStore = create<UIStoreState>((set, get) => ({
   },
 
   setTaskSort: (taskSort) => {
-    // Sound removed from apply sort as per preference
     set({ taskSort })
   },
 
@@ -288,7 +284,6 @@ export const useUIStore = create<UIStoreState>((set, get) => ({
   },
 
   setActiveSettingsTab: (activeSettingsTab) => {
-    // Sound removed from setting section navigation as per preference
     set({ activeSettingsTab })
   },
 
