@@ -1,6 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { Card } from '@/components/common/Card'
 import { db } from '@/db/db'
+import { parseEstimatedMinutes, formatMinutesToDisplay } from '@/lib/date'
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
@@ -16,30 +17,12 @@ export function FocusTimeCard() {
       return d.getDay() === jsDay
     })
 
-    const minutes = dayTasks.reduce((acc, t) => {
-      const match = t.estimatedTime.match(/(\d+)\s*(hr|min|h|m)/gi)
-      if (!match) return acc + 30
-      let mins = 0
-      for (const m of match) {
-        if (/hr|h/i.test(m)) mins += parseInt(m) * 60
-        else if (/min|m/i.test(m)) mins += parseInt(m)
-      }
-      return acc + (mins || 30)
-    }, 0)
-
+    const minutes = dayTasks.reduce((acc, t) => acc + parseEstimatedMinutes(t.estimatedTime), 0)
     return { day, minutes }
   })
 
   const totalMinutes = dayMinutes.reduce((acc, d) => acc + d.minutes, 0)
-  const hours = Math.floor(totalMinutes / 60)
-  const remMinutes = totalMinutes % 60
-  const focusTimeString =
-    totalMinutes === 0
-      ? '0m'
-      : hours > 0
-      ? `${hours}h${remMinutes > 0 ? ` ${remMinutes}m` : ''}`
-      : `${remMinutes}m`
-
+  const focusTimeString = formatMinutesToDisplay(totalMinutes)
   const maxDayMinutes = Math.max(...dayMinutes.map((d) => d.minutes), 60)
 
   return (

@@ -2,7 +2,13 @@ import { useMemo } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db } from '@/db/db'
 import { Card } from '@/components/common/Card'
-import { isTaskDueTodayOrOverdue, toCalendarDateString, isTaskStrictlyToday } from '@/lib/date'
+import {
+  isTaskDueTodayOrOverdue,
+  toCalendarDateString,
+  isTaskStrictlyToday,
+  parseEstimatedMinutes,
+  formatMinutesToDisplay,
+} from '@/lib/date'
 
 export function TodayMetricsRow() {
   const tasks = useLiveQuery(() => db.tasks.toArray(), []) || []
@@ -27,25 +33,8 @@ export function TodayMetricsRow() {
   // Calculate planned focus time for today's active tasks
   const plannedTimeString = useMemo(() => {
     if (todayTasks.length === 0) return '0m'
-
-    const totalMinutes = todayTasks.reduce((acc, t) => {
-      const match = t.estimatedTime.match(/(\d+)\s*(hr|min|h|m)/gi)
-      if (!match) return acc + 30
-      let mins = 0
-      for (const m of match) {
-        if (/hr|h/i.test(m)) mins += parseInt(m) * 60
-        else if (/min|m/i.test(m)) mins += parseInt(m)
-      }
-      return acc + (mins || 30)
-    }, 0)
-
-    const hours = Math.floor(totalMinutes / 60)
-    const remMinutes = totalMinutes % 60
-    return totalMinutes === 0
-      ? '0m'
-      : hours > 0
-      ? `${hours}h${remMinutes > 0 ? ` ${remMinutes}m` : ''}`
-      : `${remMinutes}m`
+    const totalMinutes = todayTasks.reduce((acc, t) => acc + parseEstimatedMinutes(t.estimatedTime), 0)
+    return formatMinutesToDisplay(totalMinutes)
   }, [todayTasks])
 
   return (

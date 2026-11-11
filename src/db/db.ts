@@ -8,6 +8,7 @@ export type TaskCategory =
   | 'Learning'
   | 'Plan'
   | 'Routine'
+  | 'Personal'
   | string
 
 export type TaskStatus = 'todo' | 'in_progress' | 'done'

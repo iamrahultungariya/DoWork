@@ -195,3 +195,32 @@ export function getContextualGreeting(name: string = 'Rahul'): {
 
   return { heading, subtitle }
 }
+
+/**
+ * Parses estimated time strings (e.g. "30 min", "1 hr", "1h 30m", "45m", "10:00:00 AM")
+ * into total minutes. Defaults to 30 mins if unable to parse.
+ */
+export function parseEstimatedMinutes(estimatedTime?: string | null): number {
+  if (!estimatedTime) return 30
+  const match = estimatedTime.match(/(\d+)\s*(hr|min|h|m)/gi)
+  if (!match) return 30
+  let mins = 0
+  for (const m of match) {
+    if (/hr|h/i.test(m)) mins += parseInt(m, 10) * 60
+    else if (/min|m/i.test(m)) mins += parseInt(m, 10)
+  }
+  return mins || 30
+}
+
+/**
+ * Formats total minutes into a clean display string (e.g. "1h 30m", "45m", "0m")
+ */
+export function formatMinutesToDisplay(totalMinutes: number): string {
+  if (totalMinutes <= 0) return '0m'
+  const hours = Math.floor(totalMinutes / 60)
+  const remMinutes = totalMinutes % 60
+  if (hours > 0) {
+    return remMinutes > 0 ? `${hours}h ${remMinutes}m` : `${hours}h`
+  }
+  return `${remMinutes}m`
+}

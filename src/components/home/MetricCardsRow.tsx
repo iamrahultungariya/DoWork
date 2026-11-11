@@ -46,7 +46,7 @@ export function MetricCardsRow() {
       {/* 2. Completed Today */}
       <Card className="flex flex-col justify-between p-4 sm:p-5 rounded-2xl h-32 sm:h-36">
         <span className="text-xs font-semibold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
-          Completed
+          Completed Today
         </span>
         <div>
           <div className="text-2xl sm:text-3xl font-bold tracking-tight text-[#111827] dark:text-[#F4F4F5] tabular-nums">

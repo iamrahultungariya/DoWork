@@ -88,7 +88,8 @@ export async function syncFromSupabase(userId: string): Promise<void> {
  * Creates a new task in Dexie DB and syncs to Supabase if authenticated
  */
 export async function addTask(payload: CreateTaskPayload): Promise<string> {
-  const count = await db.tasks.count()
+  const lastTask = await db.tasks.orderBy('order').last()
+  const nextOrder = (lastTask?.order ?? 0) + 1
   const now = Date.now()
   const id = `task-${now}-${Math.random().toString(36).substring(2, 7)}`
 
@@ -108,7 +109,7 @@ export async function addTask(payload: CreateTaskPayload): Promise<string> {
     starred: payload.starred ?? false,
     dueDate: finalDueDate,
     estimatedTime: payload.estimatedTime || '30 min',
-    order: count + 1,
+    order: nextOrder,
     createdAt: now,
     updatedAt: now,
   }
@@ -143,16 +144,26 @@ export async function addTask(payload: CreateTaskPayload): Promise<string> {
   return id
 }
 
+export interface UpdateTaskOptions {
+  playSound?: boolean
+}
+
 /**
  * Updates an existing task
  */
-export async function updateTask(id: string, updates: Partial<Task>): Promise<void> {
+export async function updateTask(
+  id: string,
+  updates: Partial<Task>,
+  options: UpdateTaskOptions = { playSound: true }
+): Promise<void> {
   const now = Date.now()
   await db.tasks.update(id, {
     ...updates,
     updatedAt: now,
   })
-  sound.playClick()
+  if (options.playSound !== false) {
+    sound.playClick()
+  }
 
   // Background Supabase Sync
   if (isSupabaseConfigured()) {
@@ -190,11 +201,16 @@ export async function toggleTaskCompleted(id: string, currentCompleted: number):
   const newStatus: TaskStatus = newCompleted === 1 ? 'done' : 'todo'
   const now = Date.now()
 
-  await updateTask(id, {
-    completed: newCompleted,
-    status: newStatus,
-    completedAt: newCompleted === 1 ? now : undefined,
-  })
+  // Suppress updateTask click sound so only playComplete/playUncheck plays
+  await updateTask(
+    id,
+    {
+      completed: newCompleted,
+      status: newStatus,
+      completedAt: newCompleted === 1 ? now : undefined,
+    },
+    { playSound: false }
+  )
 
   // Recalculate streak immediately
   await recalculateAndPersistStreak()
@@ -252,7 +268,8 @@ export async function deleteTask(id: string): Promise<void> {
  * Creates a new project in Dexie DB
  */
 export async function addProject(payload: CreateProjectPayload): Promise<string> {
-  const count = await db.projects.count()
+  const lastProj = await db.projects.orderBy('order').last()
+  const nextOrder = (lastProj?.order ?? 0) + 1
   const now = Date.now()
   const id = `proj-${now}-${Math.random().toString(36).substring(2, 7)}`
 
@@ -265,8 +282,8 @@ export async function addProject(payload: CreateProjectPayload): Promise<string>
     icon: payload.icon || 'laptop',
     totalTasks: 0,
     completedTasks: 0,
-    dueDate: payload.dueDate || 'No due date',
-    order: count + 1,
+    dueDate: payload.dueDate?.trim() || 'No due date',
+    order: nextOrder,
   }
 
   await db.projects.add(newProject)

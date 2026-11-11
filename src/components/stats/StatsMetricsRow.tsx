@@ -2,6 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { CheckSquare, ListChecks, Clock, Flame, ArrowUpRight } from 'lucide-react'
 import { db } from '@/db/db'
 import { Card } from '@/components/common/Card'
+import { parseEstimatedMinutes, formatMinutesToDisplay } from '@/lib/date'
 
 export function StatsMetricsRow() {
   const tasks = useLiveQuery(() => db.tasks.toArray(), []) || []
@@ -13,25 +14,9 @@ export function StatsMetricsRow() {
 
   const totalMinutes = tasks
     .filter((t) => t.completed === 1)
-    .reduce((acc, t) => {
-      const match = t.estimatedTime.match(/(\d+)\s*(hr|min|h|m)/gi)
-      if (!match) return acc + 30
-      let mins = 0
-      for (const m of match) {
-        if (/hr|h/i.test(m)) mins += parseInt(m) * 60
-        else if (/min|m/i.test(m)) mins += parseInt(m)
-      }
-      return acc + (mins || 30)
-    }, 0)
+    .reduce((acc, t) => acc + parseEstimatedMinutes(t.estimatedTime), 0)
 
-  const hours = Math.floor(totalMinutes / 60)
-  const remMinutes = totalMinutes % 60
-  const focusTimeString =
-    totalMinutes === 0
-      ? '0m'
-      : hours > 0
-      ? `${hours}h${remMinutes > 0 ? ` ${remMinutes}m` : ''}`
-      : `${remMinutes}m`
+  const focusTimeString = formatMinutesToDisplay(totalMinutes)
 
   const completionRate =
     createdCount > 0 ? Math.round((completedCount / createdCount) * 100) : 0

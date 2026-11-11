@@ -30,6 +30,47 @@ const getInitialTheme = (): ThemeMode => {
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }
 
+const FOCUS_STORAGE_KEY = 'taskcomp_focus_timer'
+
+interface PersistedFocus {
+  secondsLeft: number
+  lastUpdated: number
+  isRunning: boolean
+}
+
+function getInitialFocusTimer(): { secondsLeft: number; isRunning: boolean } {
+  if (typeof window === 'undefined') return { secondsLeft: 25 * 60, isRunning: false }
+  try {
+    const raw = localStorage.getItem(FOCUS_STORAGE_KEY)
+    if (!raw) return { secondsLeft: 25 * 60, isRunning: false }
+    const parsed: PersistedFocus = JSON.parse(raw)
+    if (parsed.isRunning && parsed.lastUpdated) {
+      const elapsed = Math.floor((Date.now() - parsed.lastUpdated) / 1000)
+      const remaining = Math.max(0, parsed.secondsLeft - elapsed)
+      return { secondsLeft: remaining, isRunning: remaining > 0 }
+    }
+    return { secondsLeft: parsed.secondsLeft ?? 25 * 60, isRunning: false }
+  } catch {
+    return { secondsLeft: 25 * 60, isRunning: false }
+  }
+}
+
+function saveFocusTimer(secondsLeft: number, isRunning: boolean) {
+  if (typeof window === 'undefined') return
+  try {
+    const payload: PersistedFocus = {
+      secondsLeft,
+      lastUpdated: Date.now(),
+      isRunning,
+    }
+    localStorage.setItem(FOCUS_STORAGE_KEY, JSON.stringify(payload))
+  } catch {
+    // Ignore storage quota
+  }
+}
+
+const initialFocus = getInitialFocusTimer()
+
 export type NavTabId = 'home' | 'my-tasks' | 'today' | 'projects' | 'stats' | 'settings'
 
 export type TaskFilterType = 'all' | 'today' | 'overdue' | 'todo' | 'in_progress' | 'done'
@@ -157,8 +198,8 @@ export const useUIStore = create<UIStoreState>((set, get) => ({
   activeSettingsTab: 'general',
   theme: getInitialTheme(),
 
-  focusSecondsLeft: 25 * 60,
-  isFocusRunning: false,
+  focusSecondsLeft: initialFocus.secondsLeft,
+  isFocusRunning: initialFocus.isRunning,
 
   setActiveTab: (tab) => {
     set({ activeTab: tab, isMobileMenuOpen: false })
@@ -298,16 +339,19 @@ export const useUIStore = create<UIStoreState>((set, get) => ({
 
   startFocusTimer: () => {
     sound.playAction()
+    saveFocusTimer(get().focusSecondsLeft, true)
     set({ isFocusRunning: true })
   },
 
   pauseFocusTimer: () => {
     sound.playClick()
+    saveFocusTimer(get().focusSecondsLeft, false)
     set({ isFocusRunning: false })
   },
 
   resetFocusTimer: () => {
     sound.playClick()
+    saveFocusTimer(25 * 60, false)
     set({ focusSecondsLeft: 25 * 60, isFocusRunning: false })
   },
 
@@ -315,9 +359,15 @@ export const useUIStore = create<UIStoreState>((set, get) => ({
     const current = get().focusSecondsLeft
     if (current <= 1) {
       sound.playComplete()
+      saveFocusTimer(25 * 60, false)
       set({ focusSecondsLeft: 25 * 60, isFocusRunning: false })
     } else {
-      set({ focusSecondsLeft: current - 1 })
+      const next = current - 1
+      // Save periodically to avoid excess writes
+      if (next % 5 === 0) {
+        saveFocusTimer(next, true)
+      }
+      set({ focusSecondsLeft: next })
     }
   },
 }))

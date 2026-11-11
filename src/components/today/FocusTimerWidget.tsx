@@ -1,15 +1,27 @@
 import { useEffect } from 'react'
+import { useShallow } from 'zustand/shallow'
 import { Play, Pause, Square } from 'lucide-react'
 import { Card } from '@/components/common/Card'
 import { useUIStore } from '@/stores/uiStore'
 
 export function FocusTimerWidget() {
-  const focusSecondsLeft = useUIStore((s) => s.focusSecondsLeft)
-  const isFocusRunning = useUIStore((s) => s.isFocusRunning)
-  const startFocusTimer = useUIStore((s) => s.startFocusTimer)
-  const pauseFocusTimer = useUIStore((s) => s.pauseFocusTimer)
-  const resetFocusTimer = useUIStore((s) => s.resetFocusTimer)
-  const tickFocusTimer = useUIStore((s) => s.tickFocusTimer)
+  const {
+    focusSecondsLeft,
+    isFocusRunning,
+    startFocusTimer,
+    pauseFocusTimer,
+    resetFocusTimer,
+    tickFocusTimer,
+  } = useUIStore(
+    useShallow((s) => ({
+      focusSecondsLeft: s.focusSecondsLeft,
+      isFocusRunning: s.isFocusRunning,
+      startFocusTimer: s.startFocusTimer,
+      pauseFocusTimer: s.pauseFocusTimer,
+      resetFocusTimer: s.resetFocusTimer,
+      tickFocusTimer: s.tickFocusTimer,
+    }))
+  )
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval> | null = null

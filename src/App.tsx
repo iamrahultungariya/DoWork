@@ -13,8 +13,9 @@ import { NewProjectModal } from '@/components/projects/NewProjectModal'
 import { ConfirmationModal } from '@/components/common/ConfirmationModal'
 import { ToastContainer } from '@/components/common/ToastContainer'
 import { AuthModal } from '@/components/auth/AuthModal'
-import { useUIStore } from '@/stores/uiStore'
-import { seedInitialTasksIfEmpty } from '@/db/db'
+import { useUIStore, applyTheme } from '@/stores/uiStore'
+import { useAuthStore } from '@/stores/authStore'
+import { db, seedInitialTasksIfEmpty } from '@/db/db'
 import { recalculateAndPersistStreak } from '@/lib/streak'
 
 const queryClient = new QueryClient({
@@ -30,9 +31,23 @@ function AppContent() {
   const activeTab = useUIStore((s) => s.activeTab)
 
   useEffect(() => {
-    seedInitialTasksIfEmpty().then(() => {
-      recalculateAndPersistStreak().catch(() => {})
-    })
+    seedInitialTasksIfEmpty()
+      .then(() => recalculateAndPersistStreak())
+      .then(() => {
+        useAuthStore.getState().initialize()
+        return db.userProfile.get('default-profile')
+      })
+      .then((profile) => {
+        if (profile?.theme) {
+          useUIStore.getState().setTheme(profile.theme)
+        } else {
+          applyTheme(useUIStore.getState().theme)
+        }
+      })
+      .catch((err) => {
+        console.warn('App initialization warning:', err)
+        applyTheme(useUIStore.getState().theme)
+      })
   }, [])
 
   return (

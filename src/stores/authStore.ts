@@ -20,6 +20,8 @@ interface AuthState {
   initialize: () => void
 }
 
+let authSubscription: { unsubscribe: () => void } | null = null
+
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   session: null,
@@ -115,7 +117,12 @@ export const useAuthStore = create<AuthState>((set) => ({
       }
     })
 
-    supabase.auth.onAuthStateChange((_event, session) => {
+    if (authSubscription) {
+      authSubscription.unsubscribe()
+      authSubscription = null
+    }
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       set({
         session,
         user: session?.user ?? null,
@@ -125,5 +132,6 @@ export const useAuthStore = create<AuthState>((set) => ({
         syncFromSupabase(session.user.id).catch(console.error)
       }
     })
+    authSubscription = subscription
   },
 }))

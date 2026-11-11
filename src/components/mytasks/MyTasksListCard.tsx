@@ -7,7 +7,13 @@ import { Checkbox } from '@/components/common/Checkbox'
 import { Badge } from '@/components/common/Badge'
 import { toggleTaskCompleted, toggleTaskStarred, deleteTask } from '@/db/taskService'
 import { useUIStore } from '@/stores/uiStore'
-import { getTaskDateStatus, isTaskOverdue, isTaskStrictlyToday, isTaskDueTodayOrOverdue } from '@/lib/date'
+import {
+  getTaskDateStatus,
+  isTaskOverdue,
+  isTaskStrictlyToday,
+  toCalendarDateString,
+  parseTaskDueDate,
+} from '@/lib/date'
 import { cn } from '@/lib/utils'
 
 export function MyTasksListCard() {
@@ -22,13 +28,19 @@ export function MyTasksListCard() {
 
   // Memoized filter and sort tasks
   const filtered = useMemo(() => {
+    const todayStr = toCalendarDateString(new Date())
+
     const list = allTasks.filter((t) => {
       if (taskFilter === 'all') return true
       if (taskFilter === 'today') {
-        return (
-          isTaskStrictlyToday(t.dueDate, t.createdAt) ||
-          (t.completed === 1 && isTaskDueTodayOrOverdue(t.dueDate, t.createdAt, t.completed))
-        )
+        if (isTaskStrictlyToday(t.dueDate, t.createdAt)) return true
+        if (t.completed === 1 && t.completedAt && toCalendarDateString(new Date(t.completedAt)) === todayStr) {
+          return true
+        }
+        if (t.completed === 0 && isTaskOverdue(t.dueDate, t.createdAt, 0)) {
+          return true
+        }
+        return false
       }
       if (taskFilter === 'overdue') {
         return isTaskOverdue(t.dueDate, t.createdAt, t.completed)
@@ -48,12 +60,18 @@ export function MyTasksListCard() {
         return a.order - b.order
       }
       if (taskSort === 'date') {
-        return a.dueDate.localeCompare(b.dueDate)
+        const dateA = parseTaskDueDate(a.dueDate, a.createdAt)
+        const dateB = parseTaskDueDate(b.dueDate, b.createdAt)
+        if (!dateA && !dateB) return a.order - b.order
+        if (!dateA) return 1
+        if (!dateB) return -1
+        const diff = dateA.getTime() - dateB.getTime()
+        return diff !== 0 ? diff : a.order - b.order
       }
       if (taskSort === 'title') {
         return a.title.localeCompare(b.title)
       }
-      return 0
+      return a.order - b.order
     })
   }, [allTasks, taskFilter, taskSort])
 
@@ -144,7 +162,12 @@ export function MyTasksListCard() {
               )}
             >
               {/* Left Side: Checkbox & Info */}
-              <div className="flex items-center space-x-3.5 flex-1 min-w-0 mr-3">
+              <div
+                className={cn(
+                  'flex items-center space-x-3.5 flex-1 min-w-0',
+                  viewMode === 'grid' ? 'w-full' : 'mr-3'
+                )}
+              >
                 <Checkbox
                   checked={isDone}
                   onChange={() => toggleTaskCompleted(task.id, task.completed)}
@@ -183,49 +206,56 @@ export function MyTasksListCard() {
                 </div>
               </div>
 
-              {/* Right Side: Badge & Actions (Edit, Delete, Star) */}
-              <div className="flex items-center space-x-1 sm:space-x-1.5 shrink-0">
-                <Badge category={task.category} className="hidden xs:inline-flex" />
+              {/* Right Side / Bottom: Badge & Actions (Edit, Delete, Star) */}
+              <div
+                className={cn(
+                  'flex items-center space-x-1 sm:space-x-1.5 shrink-0',
+                  viewMode === 'grid' && 'w-full justify-between pt-2.5 border-t border-black/[0.04] dark:border-white/[0.06] mt-1'
+                )}
+              >
+                <Badge category={task.category} className={viewMode === 'grid' ? 'inline-flex' : 'hidden xs:inline-flex'} />
 
-                {/* Edit Task */}
-                <button
-                  type="button"
-                  onClick={() => openEditTaskModal(task)}
-                  title="Edit task"
-                  aria-label={`Edit ${task.title}`}
-                  className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 p-1.5 text-neutral-400 dark:text-zinc-500 hover:text-neutral-900 dark:hover:text-zinc-200 rounded-lg transition-all cursor-pointer"
-                >
-                  <Pencil className="w-3.5 h-3.5" />
-                </button>
+                <div className="flex items-center space-x-1">
+                  {/* Edit Task */}
+                  <button
+                    type="button"
+                    onClick={() => openEditTaskModal(task)}
+                    title="Edit task"
+                    aria-label={`Edit ${task.title}`}
+                    className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 p-1.5 text-neutral-400 dark:text-zinc-500 hover:text-neutral-900 dark:hover:text-zinc-200 rounded-lg transition-all cursor-pointer"
+                  >
+                    <Pencil className="w-3.5 h-3.5" />
+                  </button>
 
-                {/* Delete Task */}
-                <button
-                  type="button"
-                  onClick={() => handleDelete(task)}
-                  title="Delete task"
-                  aria-label={`Delete ${task.title}`}
-                  className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 p-1.5 text-neutral-400 dark:text-zinc-500 hover:text-rose-600 dark:hover:text-rose-400 rounded-lg transition-all cursor-pointer"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </button>
+                  {/* Delete Task */}
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(task)}
+                    title="Delete task"
+                    aria-label={`Delete ${task.title}`}
+                    className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 p-1.5 text-neutral-400 dark:text-zinc-500 hover:text-rose-600 dark:hover:text-rose-400 rounded-lg transition-all cursor-pointer"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
 
-                {/* Star Button */}
-                <button
-                  type="button"
-                  onClick={() => toggleTaskStarred(task.id, task.starred)}
-                  title={task.starred ? 'Starred' : 'Star this task'}
-                  aria-label={task.starred ? 'Remove star' : 'Star this task'}
-                  className="p-1.5 rounded-lg transition-colors cursor-pointer"
-                >
-                  <Star
-                    className={cn(
-                      'w-3.5 h-3.5 transition-colors',
-                      task.starred
-                        ? 'fill-amber-400 text-amber-500'
-                        : 'text-neutral-300 dark:text-zinc-600 hover:text-neutral-500 dark:hover:text-zinc-400'
-                    )}
-                  />
-                </button>
+                  {/* Star Button */}
+                  <button
+                    type="button"
+                    onClick={() => toggleTaskStarred(task.id, task.starred)}
+                    title={task.starred ? 'Starred' : 'Star this task'}
+                    aria-label={task.starred ? 'Remove star' : 'Star this task'}
+                    className="p-1.5 rounded-lg transition-colors cursor-pointer"
+                  >
+                    <Star
+                      className={cn(
+                        'w-3.5 h-3.5 transition-colors',
+                        task.starred
+                          ? 'fill-amber-400 text-amber-500'
+                          : 'text-neutral-300 dark:text-zinc-600 hover:text-neutral-500 dark:hover:text-zinc-400'
+                      )}
+                    />
+                  </button>
+                </div>
               </div>
             </div>
           )

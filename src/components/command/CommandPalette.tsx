@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { Command } from 'cmdk'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Search, CheckCircle2, Circle, Plus, Home, BarChart2, Folder } from 'lucide-react'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { db } from '@/db/db'
+import { db, type Task } from '@/db/db'
 import { toggleTaskCompleted } from '@/db/taskService'
 import { useUIStore, type NavTabId } from '@/stores/uiStore'
 import { searchTasksFuzzy } from '@/lib/search'
@@ -16,8 +16,16 @@ export function CommandPalette() {
   const setAddTaskModalOpen = useUIStore((s) => s.setAddTaskModalOpen)
   const [search, setSearch] = useState('')
 
-  const allTasks = useLiveQuery(() => db.tasks.toArray(), []) || []
-  const filteredTasks = searchTasksFuzzy(search, allTasks)
+  // Query tasks only when palette is open
+  const allTasks = useLiveQuery<Task[]>(
+    () => (isCommandPaletteOpen ? db.tasks.toArray() : Promise.resolve<Task[]>([])),
+    [isCommandPaletteOpen]
+  ) || []
+
+  const filteredTasks = useMemo(() => {
+    if (!isCommandPaletteOpen) return []
+    return searchTasksFuzzy(search, allTasks)
+  }, [search, allTasks, isCommandPaletteOpen])
 
   useEffect(() => {
     if (!isCommandPaletteOpen) {

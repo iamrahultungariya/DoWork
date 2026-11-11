@@ -171,7 +171,7 @@ export function TodayTasksListCard() {
                         {dateStatus.label}
                       </span>
                     ) : (
-                      <span>{task.dueDate}</span>
+                      <span>{dateStatus.label || task.dueDate}</span>
                     )}
                     <span>·</span>
                     <span className="tabular-nums">{task.estimatedTime}</span>

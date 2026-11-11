@@ -1,13 +1,11 @@
-import { type ReactNode, useEffect } from 'react'
+import type { ReactNode } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
 import { Sidebar } from './Sidebar'
 import { TopHeader } from './TopHeader'
 import { MobileDrawer } from './MobileDrawer'
 import { MobileBottomNav } from './MobileBottomNav'
 import { LenisProvider } from './LenisProvider'
-import { useUIStore, applyTheme } from '@/stores/uiStore'
-import { useAuthStore } from '@/stores/authStore'
-import { db, seedInitialTasksIfEmpty } from '@/db/db'
+import { useUIStore } from '@/stores/uiStore'
 
 interface MainLayoutProps {
   children: ReactNode
@@ -17,21 +15,6 @@ export function MainLayout({ children }: MainLayoutProps) {
   const isCommandPaletteOpen = useUIStore((s) => s.isCommandPaletteOpen)
   const setCommandPaletteOpen = useUIStore((s) => s.setCommandPaletteOpen)
   const setAddTaskModalOpen = useUIStore((s) => s.setAddTaskModalOpen)
-
-  // Initialize Dexie seed database, Supabase Auth listener, and Theme
-  useEffect(() => {
-    seedInitialTasksIfEmpty().catch(console.error)
-    useAuthStore.getState().initialize()
-    db.userProfile.get('default-profile').then((profile) => {
-      if (profile?.theme) {
-        useUIStore.getState().setTheme(profile.theme)
-      } else {
-        applyTheme(useUIStore.getState().theme)
-      }
-    }).catch(() => {
-      applyTheme(useUIStore.getState().theme)
-    })
-  }, [])
 
   // Global Keyboard Shortcuts
   useHotkeys('ctrl+k, meta+k', (e) => {
